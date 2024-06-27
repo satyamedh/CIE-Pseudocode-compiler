@@ -61,6 +61,7 @@ t_MINUS = r'\-'
 t_MULTIPLY = r'\*'
 t_DIVIDE = r'\/'
 
+RUN_AFTER_COMPILE = True
 
 def t_VARIABLE(t):
     r'[a-zA-Z_][a-zA-Z0-9_]*'
@@ -250,5 +251,10 @@ print(c_code)
 
 print("Calling GCC")
 invoke_gcc(c_code)
+print("Compiled successfully! \n Compiled binary is at temp/temp.exe")
 
-
+print("Executing the binary")
+print("=======OUTPUT=======")
+if RUN_AFTER_COMPILE:
+    os.chdir('temp')
+    os.system('temp.exe')
