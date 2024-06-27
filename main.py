@@ -223,6 +223,14 @@ def compile_to_c(input_string):
     }}
     """
 
+    # Prettify the code
+    # Remove empty lines
+    c_code = '\n'.join([line for line in c_code.split('\n') if line.strip()])
+    # Remove trailing & leading spaces
+    c_code = '\n'.join([line.strip() for line in c_code.split('\n')])
+
+    # TODO: Indentaion
+
     return c_code
 
 def invoke_gcc(c_code):
