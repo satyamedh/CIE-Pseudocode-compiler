@@ -16,8 +16,10 @@ def test_program(file_name):
                                          'temp/temp.c'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     stdout, stderr = compiler_process.communicate()
     if stderr:
+        print("====================================")
         print(f"Compilation failed for {file_name}")
         print(stderr)
+        print("====================================")
         return
 
     for index, trial in enumerate(solutions['trials']):
@@ -30,9 +32,11 @@ def test_program(file_name):
         stdout, stderr = process.communicate(input_data)
 
         if stdout.strip() != expected_output.strip():
+            print("====================================")
             print(f"Test {file_name}@{index} failed")
             print(f"Expected: {expected_output}")
             print(f"Got: {stdout}")
+            print("====================================")
             return
 
     print(f"Test {file_name} passed")
