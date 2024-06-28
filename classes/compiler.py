@@ -58,14 +58,21 @@ class PseudocodeCompiler:
         self.c_code = c_code
         return c_code
 
-    def invoke_gcc(self):
+    def write_to_file(self):
+        # Make sure the directory exists
         try:
-            os.mkdir('temp')
+            os.mkdir(os.path.dirname(self.c_file))
         except FileExistsError:
             pass
         with open(self.c_file, 'w') as f:
             f.write(self.c_code)
 
+    def invoke_gcc(self):
+        # Make sure the directory exists
+        try:
+            os.mkdir(os.path.dirname(self.output_file))
+        except FileExistsError:
+            pass
         os.system(f'gcc {self.c_file} -o {self.output_file}')
 
     def reset(self):
