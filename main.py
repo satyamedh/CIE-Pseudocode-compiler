@@ -30,10 +30,12 @@ with open(file, 'r') as f:
     code = f.read()
 
 # Lex and parse the code
+print("Lexing")
 lexer.input(code)
 ast = parser.parse(code, lexer=lexer)
 
 # Compile the code
+print("Compiling")
 compiler.ast = ast
 compiler.compile_to_c()
 c_code = compiler.c_code
@@ -42,13 +44,16 @@ c_code = compiler.c_code
 compiler.c_file = args.cfile or 'temp/temp.c'
 compiler.output_file = args.output or 'temp/temp'
 
+print("Writing to file")
 compiler.write_to_file()
+print("Compiling with gcc")
 compiler.invoke_gcc()
 
 # Run the compiled file if needed
-
 if args.run:
-    os.system(f'{compiler.output_file}')
+    print("==== OUTPUT ====")
+    os.chdir(os.path.dirname(compiler.output_file))
+    os.system(os.path.basename(compiler.output_file))
 
 
 
