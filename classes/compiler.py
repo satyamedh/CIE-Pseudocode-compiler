@@ -3,6 +3,25 @@ import os
 
 class PseudocodeCompiler:
 
+    binop_cond_psc_to_c = {
+        "=": "==",
+        "<>": "!=",
+        "<": "<",
+        ">": ">",
+        "<=": "<=",
+        ">=": ">=",
+        "+": "+",
+        "-": "-",
+        "*": "*",
+        "/": "/",
+        "MOD": "%"
+    }
+
+    datatype_for_print = {
+        'number': '%d',
+        'string': '%s'
+    }
+
     def __init__(self, c_file: str = "temp/temp.c", output_file: str = "temp/temp"):
         self.ast = None
         self.c_code = ""
@@ -14,21 +33,25 @@ class PseudocodeCompiler:
         # node could be a tuple or a list of tuples
         if isinstance(node, tuple):
             if node[0] == 'binop':
-                return f'({self.walk(node[2])} {node[1]} {self.walk(node[3])})'
+                return f'({self.walk(node[2])} {self.binop_cond_psc_to_c[node[1]]} {self.walk(node[3])})'
             elif node[0] == 'number':
                 return str(node[1])
+            elif node[0] == 'string':
+                return f'"{node[1]}"'
             elif node[0] == 'variable':
                 return node[1]
             elif node[0] == 'assign':
                 return f'{node[1]} = {self.walk(node[2])};'
             elif node[0] == 'print':
+                if node[1][0] == 'string':
+                    return f'printf("{self.datatype_for_print[node[1][0]]}\\n", {self.walk(node[1])});'
                 return f'printf("%d\\n", {self.walk(node[1])});'
             elif node[0] == 'input':
                 return f'scanf("%d", &{node[1]});'
             elif node[0] == 'if':
                 return f'if ({self.walk(node[1])}) {{\n{self.walk(node[2])}\n}} else {{\n{self.walk(node[3])}\n}}'
             elif node[0] == 'condition':
-                return f'({self.walk(node[2])} {node[1]} {self.walk(node[3])})'
+                return f'({self.walk(node[2])} {self.binop_cond_psc_to_c[node[1]]} {self.walk(node[3])})'
             elif node[0] == 'program':
                 return '\n'.join([self.walk(child) for child in node[1]])
             elif node[0] == 'declare':

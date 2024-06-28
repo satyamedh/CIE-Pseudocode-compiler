@@ -8,24 +8,29 @@ reserved = {
     'ENDIF': 'ENDIF',
     'PRINT': 'PRINT',
     'INTEGER': 'INTEGER',
+    'STRING': 'STRING',
     'INPUT': 'INPUT',
+    'MOD': 'MOD',
 }
 
 tokens = (
-             "ASSIGNMENT",
-             "COLON",
-             "PLUS",
-             "MINUS",
-             "MULTIPLY",
-             "DIVIDE",
-             "GREATER_THAN",
-             "LESS_THAN",
-             "GREATER_THAN_EQUAL",
-             "LESS_THAN_EQUAL",
-             "EQUAL",
-             "VARIABLE",
-             "NUMBER"
-         ) + tuple(reserved.values())
+    "ASSIGNMENT",
+    "COLON",
+    "PLUS",
+    "MINUS",
+    "MULTIPLY",
+    "DIVIDE",
+    "GREATER_THAN",
+    "LESS_THAN",
+    "GREATER_THAN_EQUAL",
+    "LESS_THAN_EQUAL",
+    "EQUAL",
+    "VARIABLE",
+    "NUMBER",
+    "DOUBLE_QUOTE",
+    "SINGLE_QUOTE",
+    "STRING_DATA"
+) + tuple(reserved.values())
 
 
 def make_psuedocode_lexer():
@@ -45,6 +50,9 @@ def make_psuedocode_lexer():
     t_MINUS = r'\-'
     t_MULTIPLY = r'\*'
     t_DIVIDE = r'\/'
+
+    t_DOUBLE_QUOTE = r'\"'
+    t_SINGLE_QUOTE = r'\''
 
     def __init__(self):
         self.lexer = None
@@ -71,5 +79,11 @@ def make_psuedocode_lexer():
         r'\/\/.*'
         pass
         # No return value. Token discarded
+
+    def t_STRING_DATA(t):
+        r"""(\"([^\\\n]|(\\.))*?\")|(\''([^\\\n]|(\\.))*?\')"""
+        t.type = 'STRING_DATA'
+        t.value = t.value[1:-1]
+        return t
 
     return lex.lex()

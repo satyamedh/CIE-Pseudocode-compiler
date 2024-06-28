@@ -35,19 +35,12 @@ def make_pseudocode_parser():
         '''statement : INPUT VARIABLE'''
         p[0] = ('input', p[2])
 
-    def p_condition(p):
-        '''condition : expression GREATER_THAN expression
-                     | expression LESS_THAN expression
-                     | expression GREATER_THAN_EQUAL expression
-                     | expression LESS_THAN_EQUAL expression
-                     | expression EQUAL expression'''
-        p[0] = ('condition', p[2], p[1], p[3])
-
     def p_expression_binop(p):
         '''expression : expression PLUS expression
                       | expression MINUS expression
                       | expression MULTIPLY expression
-                      | expression DIVIDE expression'''
+                      | expression DIVIDE expression
+                      | expression MOD expression'''
         p[0] = ('binop', p[2], p[1], p[3])
 
     def p_expression_number(p):
@@ -57,6 +50,20 @@ def make_pseudocode_parser():
     def p_expression_variable(p):
         '''expression : VARIABLE'''
         p[0] = ('variable', p[1])
+
+    def p_expression_string(p):
+        '''expression : STRING_DATA'''
+        p[0] = ('string', p[1])
+
+    def p_condition(p):
+        '''condition : expression GREATER_THAN expression
+                     | expression LESS_THAN expression
+                     | expression GREATER_THAN_EQUAL expression
+                     | expression LESS_THAN_EQUAL expression
+                     | expression EQUAL expression
+                     '''
+        p[0] = ('condition', p[2], p[1], p[3])
+
 
     def p_error(p):
         if p:

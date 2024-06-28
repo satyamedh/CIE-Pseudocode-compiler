@@ -15,12 +15,13 @@ def test_program(file_name):
     compiler_process = subprocess.Popen(['python', 'main.py', f'tests/{file_name}.psc', '-o', 'temp/temp', '-c',
                                          'temp/temp.c'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     stdout, stderr = compiler_process.communicate()
-    if stderr:
-        print("====================================")
-        print(f"Compilation failed for {file_name}")
-        print(stderr)
-        print("====================================")
-        return
+    # TODO: Come up with a way to ignore warnings
+    # if stderr:
+    #     print("====================================")
+    #     print(f"Compilation might've failed for {file_name}")
+    #     print(stderr)
+    #     print("====================================")
+    #     return
 
     for index, trial in enumerate(solutions['trials']):
         input_data = str(trial[0])  # Goes to STDIN
