@@ -1,12 +1,11 @@
 import os
 from ply import lex, yacc
+from classes.lexer import tokens, reserved, make_psuedocode_lexer
+from classes.parser import make_pseudocode_parser
 
 # CIE Pseudocode compiler
 
 EXAMPLE_1 = "PRINT 3+3"
-
-
-
 
 EXAMPLE_2 = """
 DECLARE x: INTEGER
@@ -18,153 +17,10 @@ ELSE
 ENDIF 
 """
 
-reserved = {
-    'DECLARE': 'DECLARE',
-    'IF': 'IF',
-    'THEN': 'THEN',
-    'ELSE': 'ELSE',
-    'ENDIF': 'ENDIF',
-    'PRINT': 'PRINT',
-    'INTEGER': 'INTEGER'
-}
-
-tokens = (
-             "ASSIGNMENT",
-             "COLON",
-             "PLUS",
-             "MINUS",
-             "MULTIPLY",
-             "DIVIDE",
-             "GREATER_THAN",
-             "LESS_THAN",
-             "GREATER_THAN_EQUAL",
-             "LESS_THAN_EQUAL",
-             "EQUAL",
-             "VARIABLE",
-             "NUMBER"
-         ) + tuple(reserved.values())
-
-t_ignore = r'   '
-
-t_GREATER_THAN_EQUAL = r'>='
-t_LESS_THAN_EQUAL = r'<='
-
-t_EQUAL = r'='
-
-t_GREATER_THAN = r'>'
-t_LESS_THAN = r'<'
-
-t_ASSIGNMENT = r'<-'
-t_COLON = r'\:'
-t_PLUS = r'\+'
-t_MINUS = r'\-'
-t_MULTIPLY = r'\*'
-t_DIVIDE = r'\/'
-
 RUN_AFTER_COMPILE = True
 
-def t_VARIABLE(t):
-    r'[a-zA-Z_][a-zA-Z0-9_]*'
-    t.type = reserved.get(t.value, 'VARIABLE')
-    return t
-
-
-def t_NUMBER(t):
-    r'\d+'
-    t.value = int(t.value)
-    return t
-
-
-def t_newline(t):
-    r'\n+'
-    t.lexer.lineno += len(t.value)
-
-
-def t_error(t):
-    print(f"Illegal character {t.value[0]!r}")
-    t.lexer.skip(1)
-
-
-def t_COMMENT(t):
-    r'\/\/.*'
-    pass
-    # No return value. Token discarded
-
-
-lexer = lex.lex()
-
-
-# --- Parser
-
-def p_program(p):
-    '''program : statement_list'''
-    p[0] = ('program', p[1])
-
-
-def p_statement_list(p):
-    '''statement_list : statement
-                      | statement_list statement'''
-    if len(p) == 2:
-        p[0] = [p[1]]
-    else:
-        p[0] = p[1] + [p[2]]
-
-
-def p_statement_declare(p):
-    '''statement : DECLARE VARIABLE COLON INTEGER'''
-    p[0] = ('declare', p[2], p[4])
-
-
-def p_statement_assign(p):
-    '''statement : VARIABLE ASSIGNMENT expression'''
-    p[0] = ('assign', p[1], p[3])
-
-
-def p_statement_if(p):
-    '''statement : IF condition THEN statement_list ELSE statement_list ENDIF'''
-    p[0] = ('if', p[2], p[4], p[6])
-
-
-def p_statement_print(p):
-    '''statement : PRINT expression'''
-    p[0] = ('print', p[2])
-
-
-def p_condition(p):
-    '''condition : expression GREATER_THAN expression
-                 | expression LESS_THAN expression
-                 | expression GREATER_THAN_EQUAL expression
-                 | expression LESS_THAN_EQUAL expression
-                 | expression EQUAL expression'''
-    p[0] = ('condition', p[2], p[1], p[3])
-
-
-def p_expression_binop(p):
-    '''expression : expression PLUS expression
-                  | expression MINUS expression
-                  | expression MULTIPLY expression
-                  | expression DIVIDE expression'''
-    p[0] = ('binop', p[2], p[1], p[3])
-
-
-def p_expression_number(p):
-    '''expression : NUMBER'''
-    p[0] = ('number', p[1])
-
-
-def p_expression_variable(p):
-    '''expression : VARIABLE'''
-    p[0] = ('variable', p[1])
-
-
-def p_error(p):
-    if p:
-        print(f"Syntax error at '{p.value}'")
-    else:
-        print("Syntax error at EOF")
-
-
-parser = yacc.yacc()
+lexer = make_psuedocode_lexer()
+parser = make_pseudocode_parser()
 
 
 # Test the parser
@@ -213,7 +69,7 @@ def walk(node):
 
 def compile_to_c(input_string):
     lexer.input(input_string)
-    result = parser.parse(input_string)
+    result = parser.parse(input_string, lexer=lexer)
 
     c_code = f"""
     #include <stdio.h>

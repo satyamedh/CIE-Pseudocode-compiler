@@ -50,30 +50,28 @@ def make_psuedocode_lexer():
     def __init__(self):
         self.lexer = None
 
-    def t_VARIABLE(self, t):
+    def t_VARIABLE(t):
         r'[a-zA-Z_][a-zA-Z0-9_]*'
-        t.type = self.reserved.get(t.value, 'VARIABLE')
+        t.type = reserved.get(t.value, 'VARIABLE')
         return t
 
-    def t_NUMBER(self, t):
+    def t_NUMBER(t):
         r'\d+'
         t.value = int(t.value)
         return t
 
-    def t_newline(self, t):
+    def t_newline(t):
         r'\n+'
         t.lexer.lineno += len(t.value)
 
-    def t_error(self, t):
+    def t_error(t):
         print(f"Illegal character {t.value[0]!r}")
         t.lexer.skip(1)
 
-    def t_COMMENT(self, t):
+    def t_COMMENT(t):
         r'\/\/.*'
         pass
         # No return value. Token discarded
 
-    def build(self, **kwargs):
-        self.lexer = lex.lex(module=self, **kwargs)
 
     return lex.lex()
