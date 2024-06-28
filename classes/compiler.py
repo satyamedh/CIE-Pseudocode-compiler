@@ -3,9 +3,12 @@ import os
 
 class PseudocodeCompiler:
 
-    def __init__(self):
+    def __init__(self, c_file: str = "temp/temp.c", output_file: str = "temp/temp"):
         self.ast = None
         self.c_code = ""
+
+        self.c_file = c_file
+        self.output_file = output_file
 
     def walk(self, node):
         # node could be a tuple or a list of tuples
@@ -60,14 +63,11 @@ class PseudocodeCompiler:
             os.mkdir('temp')
         except FileExistsError:
             pass
-        with open('temp/temp.c', 'w') as f:
+        with open(self.c_file, 'w') as f:
             f.write(self.c_code)
 
-        os.system('gcc temp/temp.c -o temp/temp')
+        os.system(f'gcc {self.c_file} -o {self.output_file}')
 
     def reset(self):
         self.ast = None
         self.c_code = ""
-
-
-
