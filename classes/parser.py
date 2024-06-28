@@ -19,6 +19,10 @@ def make_pseudocode_parser():
         '''statement : DECLARE VARIABLE COLON INTEGER'''
         p[0] = ('declare', p[2], p[4])
 
+    def p_statement_for(p):
+        '''statement : FOR VARIABLE ASSIGNMENT expression TO expression statement_list NEXT VARIABLE'''
+        p[0] = ('for', p[2], p[4], p[6], p[7])
+
     def p_statement_assign(p):
         '''statement : VARIABLE ASSIGNMENT expression'''
         p[0] = ('assign', p[1], p[3])
@@ -26,6 +30,10 @@ def make_pseudocode_parser():
     def p_statement_if(p):
         '''statement : IF condition THEN statement_list ELSE statement_list ENDIF'''
         p[0] = ('if', p[2], p[4], p[6])
+
+    def p_statement_if_no_else(p):
+        '''statement : IF condition THEN statement_list ENDIF'''
+        p[0] = ('if_no_else', p[2], p[4])
 
     def p_statement_print(p):
         '''statement : PRINT expression'''
@@ -40,7 +48,9 @@ def make_pseudocode_parser():
                       | expression MINUS expression
                       | expression MULTIPLY expression
                       | expression DIVIDE expression
-                      | expression MOD expression'''
+                      | expression MOD expression
+                      | expression DIV expression
+                      '''
         p[0] = ('binop', p[2], p[1], p[3])
 
     def p_expression_number(p):
@@ -64,12 +74,10 @@ def make_pseudocode_parser():
                      '''
         p[0] = ('condition', p[2], p[1], p[3])
 
-
     def p_error(p):
         if p:
             print(f"Syntax error at '{p.value}'")
         else:
             print("Syntax error at EOF")
-
 
     return yacc()

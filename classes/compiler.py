@@ -14,7 +14,8 @@ class PseudocodeCompiler:
         "-": "-",
         "*": "*",
         "/": "/",
-        "MOD": "%"
+        "MOD": "%",
+        "DIV": "/"
     }
 
     datatype_for_print = {
@@ -50,19 +51,28 @@ class PseudocodeCompiler:
                 return f'scanf("%d", &{node[1]});'
             elif node[0] == 'if':
                 return f'if ({self.walk(node[1])}) {{\n{self.walk(node[2])}\n}} else {{\n{self.walk(node[3])}\n}}'
+            elif node[0] == 'if_no_else':
+                return f'if ({self.walk(node[1])}) {{\n{self.walk(node[2])}\n}}'
+            elif node[0] == 'for':
+                return f'for (int {node[1]} = {self.walk(node[2])}; {node[1]} <= {self.walk(node[3])}; {node[1]}++) {{\n{self.walk(node[4])}\n}}'
             elif node[0] == 'condition':
                 return f'({self.walk(node[2])} {self.binop_cond_psc_to_c[node[1]]} {self.walk(node[3])})'
             elif node[0] == 'program':
+                if not node[1]:
+                    return ""
                 return '\n'.join([self.walk(child) for child in node[1]])
             elif node[0] == 'declare':
                 return f'int {node[1]};'
         elif isinstance(node, list):
+            if not node:
+                return ""
             return '\n'.join([self.walk(child) for child in node])
         else:
             raise ValueError(f"Unknown node type {node}")
 
     def compile_to_c(self):
-
+        if self.ast is None:
+            raise ValueError("AST is None")
         c_code = f"""
         #include <stdio.h>
 

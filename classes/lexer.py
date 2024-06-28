@@ -11,6 +11,10 @@ reserved = {
     'STRING': 'STRING',
     'INPUT': 'INPUT',
     'MOD': 'MOD',
+    'DIV': 'DIV',
+    'FOR': 'FOR',
+    'TO': 'TO',
+    'NEXT': 'NEXT',
 }
 
 tokens = (
