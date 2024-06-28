@@ -254,7 +254,7 @@ invoke_gcc(c_code)
 print("Compiled successfully! \n Compiled binary is at temp/temp.exe")
 
 print("Executing the binary")
-print("=======OUTPUT=======")
 if RUN_AFTER_COMPILE:
+    print("=======OUTPUT=======")
     os.chdir('temp')
     os.system('temp.exe')
