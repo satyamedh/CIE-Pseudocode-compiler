@@ -1,7 +1,7 @@
 DECLARE x: INTEGER
 INPUT x
 IF x >= 2 THEN
-   PRINT x+2
+    OUTPUT x+2
 ELSE
-    PRINT x // test comment
+    OUTPUT x // test comment
 ENDIF

@@ -1,1 +1,1 @@
-PRINT 3+3
+OUTPUT 3+3

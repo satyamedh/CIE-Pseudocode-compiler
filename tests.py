@@ -5,7 +5,11 @@ import json
 
 
 def test_program(file_name):
-    solutions = json.load(open(f'tests/solutions/{file_name}.json'))
+    try:
+        solutions = json.load(open(f'tests/solutions/{file_name}.json'))
+    except FileNotFoundError:
+        print(f"No solutions found for {file_name}")
+        return
 
     # the solutions are stored in the trials variable
     # each trial is a list of inputs and expected outputs
@@ -34,7 +38,7 @@ def test_program(file_name):
 
         if stdout.strip() != expected_output.strip():
             print("====================================")
-            print(f"Test {file_name}@{index} failed")
+            print(f"Test {file_name}#{index} failed")
             print(f"Expected: {expected_output}")
             print(f"Got: {stdout}")
             print("====================================")

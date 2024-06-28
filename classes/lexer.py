@@ -6,7 +6,7 @@ reserved = {
     'THEN': 'THEN',
     'ELSE': 'ELSE',
     'ENDIF': 'ENDIF',
-    'PRINT': 'PRINT',
+    'OUTPUT': 'PRINT',
     'INTEGER': 'INTEGER',
     'STRING': 'STRING',
     'INPUT': 'INPUT',

@@ -1,7 +1,7 @@
 DECLARE x: INTEGER
 INPUT x
 IF x MOD 2 = 0 THEN
-    PRINT "Even"
+    OUTPUT "Even"
 ELSE
-    PRINT "Odd"
+    OUTPUT "Odd"
 ENDIF
