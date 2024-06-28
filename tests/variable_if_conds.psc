@@ -1,5 +1,5 @@
 DECLARE x: INTEGER
-x <- 2
+INPUT x
 IF x >= 2 THEN
    PRINT x
 ELSE
