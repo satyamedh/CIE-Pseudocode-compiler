@@ -23,6 +23,8 @@ class PseudocodeCompiler:
                 return f'{node[1]} = {self.walk(node[2])};'
             elif node[0] == 'print':
                 return f'printf("%d\\n", {self.walk(node[1])});'
+            elif node[0] == 'input':
+                return f'scanf("%d", &{node[1]});'
             elif node[0] == 'if':
                 return f'if ({self.walk(node[1])}) {{\n{self.walk(node[2])}\n}} else {{\n{self.walk(node[3])}\n}}'
             elif node[0] == 'condition':

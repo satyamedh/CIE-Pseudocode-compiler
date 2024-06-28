@@ -31,6 +31,10 @@ def make_pseudocode_parser():
         '''statement : PRINT expression'''
         p[0] = ('print', p[2])
 
+    def p_statement_input(p):
+        '''statement : INPUT VARIABLE'''
+        p[0] = ('input', p[2])
+
     def p_condition(p):
         '''condition : expression GREATER_THAN expression
                      | expression LESS_THAN expression
@@ -59,5 +63,6 @@ def make_pseudocode_parser():
             print(f"Syntax error at '{p.value}'")
         else:
             print("Syntax error at EOF")
+
 
     return yacc()

@@ -1,14 +1,15 @@
 import ply.lex as lex
 
 reserved = {
-        'DECLARE': 'DECLARE',
-        'IF': 'IF',
-        'THEN': 'THEN',
-        'ELSE': 'ELSE',
-        'ENDIF': 'ENDIF',
-        'PRINT': 'PRINT',
-        'INTEGER': 'INTEGER'
-    }
+    'DECLARE': 'DECLARE',
+    'IF': 'IF',
+    'THEN': 'THEN',
+    'ELSE': 'ELSE',
+    'ENDIF': 'ENDIF',
+    'PRINT': 'PRINT',
+    'INTEGER': 'INTEGER',
+    'INPUT': 'INPUT',
+}
 
 tokens = (
              "ASSIGNMENT",
@@ -28,8 +29,6 @@ tokens = (
 
 
 def make_psuedocode_lexer():
-
-
     t_ignore = r'   '
 
     t_GREATER_THAN_EQUAL = r'>='
@@ -72,6 +71,5 @@ def make_psuedocode_lexer():
         r'\/\/.*'
         pass
         # No return value. Token discarded
-
 
     return lex.lex()
