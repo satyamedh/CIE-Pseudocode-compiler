@@ -77,8 +77,14 @@ def make_pseudocode_parser():
                      | expression GREATER_THAN_EQUAL expression
                      | expression LESS_THAN_EQUAL expression
                      | expression EQUAL expression
+                     | expression AND expression
+                     | expression OR expression
+                    | NOT expression
                      '''
-        p[0] = ('condition', p[2], p[1], p[3])
+        if len(p) == 3:
+            p[0] = ('condition', p[1], p[2])
+        else:
+            p[0] = ('condition', p[2], p[1], p[3])
 
     def p_error(p):
         if p:

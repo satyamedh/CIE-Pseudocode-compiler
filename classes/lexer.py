@@ -17,7 +17,10 @@ reserved = {
     'NEXT': 'NEXT',
     'BOOLEAN': 'BOOLEAN',
     'TRUE': 'TRUE',
-    'FALSE': 'FALSE'
+    'FALSE': 'FALSE',
+    'AND': 'AND',
+    'OR': 'OR',
+    'NOT': 'NOT',
 }
 
 tokens = (

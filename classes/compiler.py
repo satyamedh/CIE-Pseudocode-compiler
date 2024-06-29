@@ -15,7 +15,10 @@ class PseudocodeCompiler:
         "*": "*",
         "/": "/",
         "MOD": "%",
-        "DIV": "/"
+        "DIV": "/",
+        "AND": "&&",
+        "OR": "||",
+        "NOT": "!"
     }
 
     datatype_for_print = {
@@ -35,6 +38,8 @@ class PseudocodeCompiler:
 
         self.c_file = c_file
         self.output_file = output_file
+        self.variables = {}
+
 
     def walk(self, node):
         # node could be a tuple or a list of tuples
@@ -54,7 +59,17 @@ class PseudocodeCompiler:
                     return f'printf("{self.datatype_for_print[node[1][0]]}\\n", {self.walk(node[1])});'
                 return f'printf("%d\\n", {self.walk(node[1])});'
             elif node[0] == 'input':
-                return f'scanf("%d", &{node[1]});'
+                # get the datatype of the variable
+                datatype = self.variables[node[1]]
+                if datatype == 'STRING' or datatype == 'INTEGER':
+                    return f'scanf("{self.datatypes_to_c[datatype]}", &{node[1]});'
+                if datatype == 'BOOLEAN':
+                    return f'''
+                    char* {node[1]}_str = malloc(10);
+                    scanf("%s", {node[1]}_str);
+                    {node[1]} = string_to_bool({node[1]}_str);
+                    // deallocate the memory
+                    free({node[1]}_str);'''
             elif node[0] == 'if':
                 return f'if ({self.walk(node[1])}) {{\n{self.walk(node[2])}\n}} else {{\n{self.walk(node[3])}\n}}'
             elif node[0] == 'if_no_else':
@@ -68,6 +83,7 @@ class PseudocodeCompiler:
                     return ""
                 return '\n'.join([self.walk(child) for child in node[1]])
             elif node[0] == 'declare':
+                self.variables[node[1]] = node[2]
                 return f'{self.datatypes_to_c[node[2]]} {node[1]};'
         elif isinstance(node, list):
             if not node:
@@ -82,6 +98,17 @@ class PseudocodeCompiler:
         c_code = f"""
         #include <stdio.h>
         #include <stdbool.h> 
+        #include <stdlib.h>
+        #include <string.h>
+        
+        // Helper functions
+        bool string_to_bool(char* str) {{
+            if (strcmp(str, "true") == 0) {{
+                return true;
+            }}
+            return false;
+        }}
+        
         
         int main() {{
         {self.walk(self.ast)}
