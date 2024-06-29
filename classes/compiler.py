@@ -3,7 +3,7 @@ import os
 
 class PseudocodeCompiler:
 
-    binop_cond_psc_to_c = {
+    binop_cond_psc_to_cpp = {
         "=": "==",
         "<>": "!=",
         "<": "<",
@@ -28,17 +28,17 @@ class PseudocodeCompiler:
         'STRING': '%s',
     }
 
-    datatypes_to_c = {
+    datatypes_to_cpp = {
         'INTEGER': 'int',
         'STRING': 'char*',
         'BOOLEAN': 'bool'
     }
 
-    def __init__(self, c_file: str = "temp/temp.c", output_file: str = "temp/temp"):
+    def __init__(self, cpp_file: str = "temp/temp.cpp", output_file: str = "temp/temp"):
         self.ast = None
-        self.c_code = ""
+        self.cpp_code = ""
 
-        self.c_file = c_file
+        self.cpp_file = cpp_file
         self.output_file = output_file
         self.variables = {}
 
@@ -47,7 +47,7 @@ class PseudocodeCompiler:
         # node could be a tuple or a list of tuples
         if isinstance(node, tuple):
             if node[0] == 'binop':
-                return f'({self.walk(node[2])} {self.binop_cond_psc_to_c[node[1]]} {self.walk(node[3])})'
+                return f'({self.walk(node[2])} {self.binop_cond_psc_to_cpp[node[1]]} {self.walk(node[3])})'
             elif node[0] == 'number':
                 return str(node[1])
             elif node[0] == 'string':
@@ -81,14 +81,14 @@ class PseudocodeCompiler:
             elif node[0] == 'condition':
                 if node[1] == 'NOT':
                     return f'!{self.walk(node[2])}'
-                return f'({self.walk(node[2])} {self.binop_cond_psc_to_c[node[1]]} {self.walk(node[3])})'
+                return f'({self.walk(node[2])} {self.binop_cond_psc_to_cpp[node[1]]} {self.walk(node[3])})'
             elif node[0] == 'program':
                 if not node[1]:
                     return ""
                 return '\n'.join([self.walk(child) for child in node[1]])
             elif node[0] == 'declare':
                 self.variables[node[1]] = node[2]
-                return f'{self.datatypes_to_c[node[2]]} {node[1]};'
+                return f'{self.datatypes_to_cpp[node[2]]} {node[1]};'
         elif isinstance(node, list):
             if not node:
                 return ""
@@ -96,10 +96,10 @@ class PseudocodeCompiler:
         else:
             raise ValueError(f"Unknown node type {node}")
 
-    def compile_to_c(self):
+    def compile_to_cpp(self):
         if self.ast is None:
             raise ValueError("AST is None")
-        c_code = f"""
+        cpp_code = f"""
         #include <stdio.h>
         #include <stdbool.h> 
         #include <stdlib.h>
@@ -122,23 +122,23 @@ class PseudocodeCompiler:
 
         # Prettify the code
         # Remove empty lines
-        c_code = '\n'.join([line for line in c_code.split('\n') if line.strip()])
+        cpp_code = '\n'.join([line for line in cpp_code.split('\n') if line.strip()])
         # Remove trailing & leading spaces
-        c_code = '\n'.join([line.strip() for line in c_code.split('\n')])
+        cpp_code = '\n'.join([line.strip() for line in cpp_code.split('\n')])
 
         # TODO: Indentaion
 
-        self.c_code = c_code
-        return c_code
+        self.cpp_code = cpp_code
+        return cpp_code
 
     def write_to_file(self):
         # Make sure the directory exists
         try:
-            os.mkdir(os.path.dirname(self.c_file))
+            os.mkdir(os.path.dirname(self.cpp_file))
         except FileExistsError:
             pass
-        with open(self.c_file, 'w') as f:
-            f.write(self.c_code)
+        with open(self.cpp_file, 'w') as f:
+            f.write(self.cpp_code)
 
     def invoke_gcc(self):
         # Make sure the directory exists
@@ -146,8 +146,8 @@ class PseudocodeCompiler:
             os.mkdir(os.path.dirname(self.output_file))
         except FileExistsError:
             pass
-        os.system(f'gcc {self.c_file} -o {self.output_file}')
+        os.system(f'g++ {self.cpp_file} -o {self.output_file}')
 
     def reset(self):
         self.ast = None
-        self.c_code = ""
+        self.cpp_code = ""
