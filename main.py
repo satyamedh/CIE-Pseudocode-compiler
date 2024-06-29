@@ -1,7 +1,6 @@
 import os
 import argparse
-from ply import lex, yacc
-from classes.lexer import tokens, reserved, make_psuedocode_lexer
+from classes.lexer import make_psuedocode_lexer
 from classes.parser import make_pseudocode_parser
 from classes.compiler import PseudocodeCompiler
 
@@ -66,8 +65,3 @@ if args.run:
     print("==== OUTPUT ====")
     os.chdir(os.path.dirname(compiler.output_file))
     os.system(os.path.basename(compiler.output_file))
-
-
-
-
-
