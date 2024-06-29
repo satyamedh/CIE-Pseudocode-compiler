@@ -57,21 +57,21 @@ class PseudocodeCompiler:
             elif node[0] == 'assign':
                 return f'{node[1]} = {self.walk(node[2])};'
             elif node[0] == 'print':
-                if node[1][0] == 'string':
-                    return f'printf("{self.datatype_for_print[node[1][0]]}\\n", {self.walk(node[1])});'
-                return f'printf("%d\\n", {self.walk(node[1])});'
+                return f'''
+                std::cout << {self.walk(node[1])} << std::endl;                
+                '''
             elif node[0] == 'input':
                 # get the datatype of the variable
                 datatype = self.variables[node[1]]
                 if datatype == 'STRING' or datatype == 'INTEGER':
-                    return f'scanf("{self.datatype_for_print[datatype]}", &{node[1]});'
+                    return f'std::cin >> {node[1]};'
                 if datatype == 'BOOLEAN':
                     return f'''
-                    char* {node[1]}_str = malloc(10);
-                    scanf("%s", {node[1]}_str);
+                    char* {node[1]}_str = new char[10];
+                    std::cin >> {node[1]}_str;
                     {node[1]} = string_to_bool({node[1]}_str);
-                    // deallocate the memory
-                    free({node[1]}_str);'''
+                    free({node[1]}_str);
+                    '''
             elif node[0] == 'if':
                 return f'if ({self.walk(node[1])}) {{\n{self.walk(node[2])}\n}} else {{\n{self.walk(node[3])}\n}}'
             elif node[0] == 'if_no_else':
@@ -100,13 +100,16 @@ class PseudocodeCompiler:
         if self.ast is None:
             raise ValueError("AST is None")
         cpp_code = f"""
-        #include <stdio.h>
-        #include <stdbool.h> 
         #include <stdlib.h>
         #include <string.h>
+        #include <iostream>
         
         // Helper functions
         bool string_to_bool(char* str) {{
+            // convert the string to lowercase
+            for (int i = 0; str[i]; i++) {{
+                str[i] = tolower(str[i]);
+            }}
             if (strcmp(str, "true") == 0) {{
                 return true;
             }}
