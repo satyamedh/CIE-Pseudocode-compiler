@@ -1,0 +1,8 @@
+{
+  "trials": [
+    ["true\ntrue", "TRUE"],
+    ["true\nfalse", "TRUE"],
+    ["false\ntrue", "TRUE"],
+    ["false\nfalse", "FALSE"]
+  ]
+}
