@@ -21,26 +21,30 @@ reserved = {
     'AND': 'AND',
     'OR': 'OR',
     'NOT': 'NOT',
+    'CHAR': 'CHAR',
+    'REAL': 'REAL',
 }
 
 tokens = (
-    "ASSIGNMENT",
-    "COLON",
-    "PLUS",
-    "MINUS",
-    "MULTIPLY",
-    "DIVIDE",
-    "GREATER_THAN",
-    "LESS_THAN",
-    "GREATER_THAN_EQUAL",
-    "LESS_THAN_EQUAL",
-    "EQUAL",
-    "VARIABLE",
-    "NUMBER",
-    "DOUBLE_QUOTE",
-    "SINGLE_QUOTE",
-    "STRING_DATA"
-) + tuple(reserved.values())
+             "ASSIGNMENT",
+             "COLON",
+             "PLUS",
+             "MINUS",
+             "MULTIPLY",
+             "DIVIDE",
+             "GREATER_THAN",
+             "LESS_THAN",
+             "GREATER_THAN_EQUAL",
+             "LESS_THAN_EQUAL",
+             "EQUAL",
+             "VARIABLE",
+             "NUMBER",
+             "DOUBLE_QUOTE",
+             "SINGLE_QUOTE",
+             "STRING_DATA",
+             "CHAR_DATA",
+             "REAL_NUMBER"
+         ) + tuple(reserved.values())
 
 
 def make_psuedocode_lexer():
@@ -72,10 +76,18 @@ def make_psuedocode_lexer():
         t.type = reserved.get(t.value, 'VARIABLE')
         return t
 
+    def t_REAL_NUMBER(t):
+        r"""[-+]?[0-9]+[.][0-9]*"""
+        t.type = 'REAL_NUMBER'
+        t.value = float(t.value)
+        return t
+
     def t_NUMBER(t):
         r'\d+'
         t.value = int(t.value)
         return t
+
+
 
     def t_newline(t):
         r'\n+'
@@ -94,6 +106,12 @@ def make_psuedocode_lexer():
         r"""(\"([^\\\n]|(\\.))*?\")|(\''([^\\\n]|(\\.))*?\')"""
         t.type = 'STRING_DATA'
         t.value = t.value[1:-1]
+        return t
+
+    def t_CHAR_DATA(t):
+        r'\'(.)\''
+        t.type = 'CHAR_DATA'
+        t.value = t.value[1]
         return t
 
     return lex.lex()

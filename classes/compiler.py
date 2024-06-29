@@ -31,7 +31,9 @@ class PseudocodeCompiler:
     datatypes_to_cpp = {
         'INTEGER': 'int',
         'STRING': 'char*',
-        'BOOLEAN': 'bool'
+        'BOOLEAN': 'bool',
+        'CHAR': 'char',
+        'REAL': 'float'
     }
 
     def __init__(self, cpp_file: str = "temp/temp.cpp", output_file: str = "temp/temp"):
@@ -52,6 +54,8 @@ class PseudocodeCompiler:
                 return str(node[1])
             elif node[0] == 'string':
                 return f'"{node[1]}"'
+            elif node[0] == 'char':
+                return f"'{node[1]}'"
             elif node[0] == 'variable':
                 return node[1]
             elif node[0] == 'assign':
@@ -63,7 +67,7 @@ class PseudocodeCompiler:
             elif node[0] == 'input':
                 # get the datatype of the variable
                 datatype = self.variables[node[1]]
-                if datatype == 'STRING' or datatype == 'INTEGER':
+                if datatype == 'STRING' or datatype == 'INTEGER' or datatype == 'REAL':
                     return f'std::cin >> {node[1]};'
                 if datatype == 'BOOLEAN':
                     return f'''
