@@ -1,0 +1,3 @@
+DECLARE x: CHAR
+x <- 'X'
+OUTPUT x

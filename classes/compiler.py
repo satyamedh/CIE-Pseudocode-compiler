@@ -31,7 +31,8 @@ class PseudocodeCompiler:
     datatypes_to_cpp = {
         'INTEGER': 'int',
         'STRING': 'char*',
-        'BOOLEAN': 'bool'
+        'BOOLEAN': 'bool',
+        'CHAR': 'char'
     }
 
     def __init__(self, cpp_file: str = "temp/temp.cpp", output_file: str = "temp/temp"):
@@ -52,6 +53,8 @@ class PseudocodeCompiler:
                 return str(node[1])
             elif node[0] == 'string':
                 return f'"{node[1]}"'
+            elif node[0] == 'char':
+                return f"'{node[1]}'"
             elif node[0] == 'variable':
                 return node[1]
             elif node[0] == 'assign':

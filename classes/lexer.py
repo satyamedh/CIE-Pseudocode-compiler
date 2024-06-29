@@ -21,6 +21,7 @@ reserved = {
     'AND': 'AND',
     'OR': 'OR',
     'NOT': 'NOT',
+    'CHAR': 'CHAR',
 }
 
 tokens = (
@@ -39,7 +40,8 @@ tokens = (
     "NUMBER",
     "DOUBLE_QUOTE",
     "SINGLE_QUOTE",
-    "STRING_DATA"
+    "STRING_DATA",
+    "CHAR_DATA",
 ) + tuple(reserved.values())
 
 
@@ -94,6 +96,12 @@ def make_psuedocode_lexer():
         r"""(\"([^\\\n]|(\\.))*?\")|(\''([^\\\n]|(\\.))*?\')"""
         t.type = 'STRING_DATA'
         t.value = t.value[1:-1]
+        return t
+
+    def t_CHAR_DATA(t):
+        r'\'(.)\''
+        t.type = 'CHAR_DATA'
+        t.value = t.value[1]
         return t
 
     return lex.lex()
