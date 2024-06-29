@@ -15,8 +15,14 @@ def make_pseudocode_parser():
         else:
             p[0] = p[1] + [p[2]]
 
+    def p_data_type(p):
+        '''data_type : INTEGER
+                     | STRING
+                     | BOOLEAN'''
+        p[0] = p[1]
+
     def p_statement_declare(p):
-        '''statement : DECLARE VARIABLE COLON INTEGER'''
+        '''statement : DECLARE VARIABLE COLON data_type'''
         p[0] = ('declare', p[2], p[4])
 
     def p_statement_for(p):

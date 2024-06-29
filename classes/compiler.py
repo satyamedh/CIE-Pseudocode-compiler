@@ -23,6 +23,12 @@ class PseudocodeCompiler:
         'string': '%s'
     }
 
+    datatypes_to_c = {
+        'INTEGER': 'int',
+        'STRING': 'char*',
+        'BOOLEAN': 'bool'
+    }
+
     def __init__(self, c_file: str = "temp/temp.c", output_file: str = "temp/temp"):
         self.ast = None
         self.c_code = ""
@@ -62,7 +68,7 @@ class PseudocodeCompiler:
                     return ""
                 return '\n'.join([self.walk(child) for child in node[1]])
             elif node[0] == 'declare':
-                return f'int {node[1]};'
+                return f'{self.datatypes_to_c[node[2]]} {node[1]};'
         elif isinstance(node, list):
             if not node:
                 return ""
@@ -75,7 +81,8 @@ class PseudocodeCompiler:
             raise ValueError("AST is None")
         c_code = f"""
         #include <stdio.h>
-
+        #include <stdbool.h> 
+        
         int main() {{
         {self.walk(self.ast)}
         return 0;
