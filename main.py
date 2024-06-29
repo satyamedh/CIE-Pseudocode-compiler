@@ -37,6 +37,8 @@ if args.debug:
     for tok in lexer:
         print(tok)
     lexer.input(code)
+    lexer.lineno = 1
+    lexer.lexpos = 0
     print("==== PARSE ====")
 ast = parser.parse(code, lexer=lexer)
 if args.debug:
