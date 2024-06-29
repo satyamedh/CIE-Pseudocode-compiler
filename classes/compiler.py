@@ -67,7 +67,7 @@ class PseudocodeCompiler:
                     return f'std::cin >> {node[1]};'
                 if datatype == 'BOOLEAN':
                     return f'''
-                    std::string {node[1]}_str = new char[10];
+                    std::string {node[1]}_str;
                     std::cin >> {node[1]}_str;
                     {node[1]} = string_to_bool({node[1]}_str);
                     '''
