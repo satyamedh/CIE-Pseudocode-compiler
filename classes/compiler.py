@@ -67,10 +67,9 @@ class PseudocodeCompiler:
                     return f'std::cin >> {node[1]};'
                 if datatype == 'BOOLEAN':
                     return f'''
-                    char* {node[1]}_str = new char[10];
+                    std::string {node[1]}_str = new char[10];
                     std::cin >> {node[1]}_str;
                     {node[1]} = string_to_bool({node[1]}_str);
-                    free({node[1]}_str);
                     '''
             elif node[0] == 'if':
                 return f'if ({self.walk(node[1])}) {{\n{self.walk(node[2])}\n}} else {{\n{self.walk(node[3])}\n}}'
@@ -106,15 +105,11 @@ class PseudocodeCompiler:
         #include <cctype>
         
         // Helper functions
-        bool string_to_bool(char* str) {{
-            // convert the string to lowercase
-            for (int i = 0; str[i]; i++) {{
-                str[i] = tolower(str[i]);
+        bool string_to_bool(std::string str) {{
+            for (char &c : str) {{
+                c = std::tolower(c);
             }}
-            if (strcmp(str, "true") == 0) {{
-                return true;
-            }}
-            return false;
+        return str == "true";
         }}
         
         
