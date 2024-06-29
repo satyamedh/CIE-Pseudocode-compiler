@@ -19,7 +19,8 @@ def make_pseudocode_parser():
         '''data_type : INTEGER
                      | STRING
                      | BOOLEAN
-                     | CHAR'''
+                     | CHAR
+                     | REAL'''
         p[0] = p[1]
 
     def p_statement_declare(p):
@@ -62,6 +63,10 @@ def make_pseudocode_parser():
 
     def p_expression_number(p):
         '''expression : NUMBER'''
+        p[0] = ('number', p[1])
+
+    def p_expression_real_number(p):
+        '''expression : REAL_NUMBER'''
         p[0] = ('number', p[1])
 
     def p_expression_variable(p):
