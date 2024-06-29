@@ -23,7 +23,9 @@ class PseudocodeCompiler:
 
     datatype_for_print = {
         'number': '%d',
-        'string': '%s'
+        'string': '%s',
+        'INTEGER': '%d',
+        'STRING': '%s',
     }
 
     datatypes_to_c = {
@@ -62,7 +64,7 @@ class PseudocodeCompiler:
                 # get the datatype of the variable
                 datatype = self.variables[node[1]]
                 if datatype == 'STRING' or datatype == 'INTEGER':
-                    return f'scanf("{self.datatypes_to_c[datatype]}", &{node[1]});'
+                    return f'scanf("{self.datatype_for_print[datatype]}", &{node[1]});'
                 if datatype == 'BOOLEAN':
                     return f'''
                     char* {node[1]}_str = malloc(10);
