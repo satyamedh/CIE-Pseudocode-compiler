@@ -46,14 +46,14 @@ if args.debug:
 # Compile the code
 print("Compiling")
 compiler.ast = ast
-compiler.compile_to_c()
-c_code = compiler.c_code
+compiler.compile_to_cpp()
+c_code = compiler.cpp_code
 if args.debug:
     print("==== C CODE ====")
     print(c_code)
 
 # Write and compile the C code
-compiler.c_file = args.cfile or 'temp/temp.c'
+compiler.cpp_file = args.cfile or 'temp/temp.c'
 compiler.output_file = args.output or 'temp/temp'
 
 print("Writing to file")

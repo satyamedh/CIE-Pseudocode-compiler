@@ -1,0 +1,6 @@
+{
+  "trials": [
+    ["true", "FALSE"],
+    ["false", "TRUE"]
+  ]
+}
