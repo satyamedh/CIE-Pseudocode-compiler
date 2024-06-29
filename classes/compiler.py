@@ -100,9 +100,10 @@ class PseudocodeCompiler:
         if self.ast is None:
             raise ValueError("AST is None")
         cpp_code = f"""
-        #include <stdlib.h>
-        #include <string.h>
+        #include <cstdlib>
+        #include <cstring>
         #include <iostream>
+        #include <cctype>
         
         // Helper functions
         bool string_to_bool(char* str) {{
