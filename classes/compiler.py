@@ -79,6 +79,8 @@ class PseudocodeCompiler:
             elif node[0] == 'for':
                 return f'for (int {node[1]} = {self.walk(node[2])}; {node[1]} <= {self.walk(node[3])}; {node[1]}++) {{\n{self.walk(node[4])}\n}}'
             elif node[0] == 'condition':
+                if node[1] == 'NOT':
+                    return f'!{self.walk(node[2])}'
                 return f'({self.walk(node[2])} {self.binop_cond_psc_to_c[node[1]]} {self.walk(node[3])})'
             elif node[0] == 'program':
                 if not node[1]:
