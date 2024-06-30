@@ -14,6 +14,9 @@ def test_program(file_name):
     # the solutions are stored in the trials variable
     # each trial is a list of inputs and expected outputs
 
+    # Delete the temp directory
+    os.system('rmdir /s /q temp')
+
     # run the main.py file with the input
     # os.system(f'python main.py tests/{file_name}.psc -o temp/temp -c temp/temp.c')
     compiler_process = subprocess.Popen(['python', 'main.py', f'tests/{file_name}.psc', '-o', 'temp/temp', '-c',

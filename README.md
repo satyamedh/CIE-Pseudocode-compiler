@@ -38,6 +38,7 @@ I then use the AST to generate C++ code, and call `g++` to compile the generated
   - All comparison operators
   - `DECLARE` and `<-` assignment operators
   - More things I can't remember right now
+- Haven't tested on linux or mac yet, probably won't work
 
 ## Usage
 ```bash
