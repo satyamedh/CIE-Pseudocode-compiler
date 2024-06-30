@@ -36,11 +36,11 @@ def make_pseudocode_parser():
         p[0] = ('assign', p[1], p[3])
 
     def p_statement_if(p):
-        '''statement : IF condition THEN statement_list ELSE statement_list ENDIF'''
+        '''statement : IF expression THEN statement_list ELSE statement_list ENDIF'''
         p[0] = ('if', p[2], p[4], p[6])
 
     def p_statement_if_no_else(p):
-        '''statement : IF condition THEN statement_list ENDIF'''
+        '''statement : IF expression THEN statement_list ENDIF'''
         p[0] = ('if_no_else', p[2], p[4])
 
     def p_statement_print(p):
@@ -48,7 +48,7 @@ def make_pseudocode_parser():
         p[0] = ('print', p[2])
 
     def p_statement_input(p):
-        '''statement : INPUT VARIABLE'''
+        '''statement :  INPUT VARIABLE'''
         p[0] = ('input', p[2])
 
     def p_expression_binop(p):
@@ -58,8 +58,26 @@ def make_pseudocode_parser():
                       | expression DIVIDE expression
                       | expression MOD expression
                       | expression DIV expression
+                      | expression AND expression
+                      | expression OR expression
+                        | expression EQUAL expression
+                        | expression GREATER_THAN expression
+                        | expression LESS_THAN expression
+                        | expression GREATER_THAN_EQUAL expression
+                        | expression LESS_THAN_EQUAL expression
+                        | expression NOT_EQUAL expression
+                        | NOT expression
+                      | OPEN_BRACKET expression CLOSE_BRACKET
                       '''
-        p[0] = ('binop', p[2], p[1], p[3])
+        if len(p) == 4:
+            if p[1] == '(':
+                p[0] = p[2]
+            else:
+                p[0] = ('binop', p[2], p[1], p[3])
+        elif len(p) == 3:
+            p[0] = p[2]
+        else:  # NOT
+            p[0] = ('binop', p[1], p[2])
 
     def p_expression_number(p):
         '''expression : NUMBER'''
@@ -81,20 +99,10 @@ def make_pseudocode_parser():
         '''expression : CHAR_DATA'''
         p[0] = ('char', p[1])
 
-    def p_condition(p):
-        '''condition : expression GREATER_THAN expression
-                     | expression LESS_THAN expression
-                     | expression GREATER_THAN_EQUAL expression
-                     | expression LESS_THAN_EQUAL expression
-                     | expression EQUAL expression
-                     | expression AND expression
-                     | expression OR expression
-                    | NOT expression
-                     '''
-        if len(p) == 3:
-            p[0] = ('condition', p[1], p[2])
-        else:
-            p[0] = ('condition', p[2], p[1], p[3])
+    def p_expression_boolean(p):
+        '''expression : TRUE
+                      | FALSE'''
+        p[0] = ('boolean', p[1])
 
     def p_error(p):
         if p:

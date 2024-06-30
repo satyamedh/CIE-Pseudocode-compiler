@@ -58,6 +58,8 @@ class PseudocodeCompiler:
                 return f"'{node[1]}'"
             elif node[0] == 'variable':
                 return node[1]
+            elif node[0] == 'boolean':
+                return str(node[1]).lower()
             elif node[0] == 'assign':
                 return f'{node[1]} = {self.walk(node[2])};'
             elif node[0] == 'print':

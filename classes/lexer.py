@@ -26,25 +26,28 @@ reserved = {
 }
 
 tokens = (
-             "ASSIGNMENT",
-             "COLON",
-             "PLUS",
-             "MINUS",
-             "MULTIPLY",
-             "DIVIDE",
-             "GREATER_THAN",
-             "LESS_THAN",
-             "GREATER_THAN_EQUAL",
-             "LESS_THAN_EQUAL",
-             "EQUAL",
-             "VARIABLE",
-             "NUMBER",
-             "DOUBLE_QUOTE",
-             "SINGLE_QUOTE",
-             "STRING_DATA",
-             "CHAR_DATA",
-             "REAL_NUMBER"
-         ) + tuple(reserved.values())
+    "ASSIGNMENT",
+    "COLON",
+    "PLUS",
+    "MINUS",
+    "MULTIPLY",
+    "DIVIDE",
+    "GREATER_THAN",
+    "LESS_THAN",
+    "GREATER_THAN_EQUAL",
+    "LESS_THAN_EQUAL",
+    "EQUAL",
+    "VARIABLE",
+    "NUMBER",
+    "DOUBLE_QUOTE",
+    "SINGLE_QUOTE",
+    "STRING_DATA",
+    "CHAR_DATA",
+    "REAL_NUMBER",
+    "OPEN_BRACKET",
+    "CLOSE_BRACKET",
+    "NOT_EQUAL"
+) + tuple(reserved.values())
 
 
 def make_psuedocode_lexer():
@@ -54,6 +57,7 @@ def make_psuedocode_lexer():
     t_LESS_THAN_EQUAL = r'<='
 
     t_EQUAL = r'='
+    t_NOT_EQUAL = r'<>'
 
     t_GREATER_THAN = r'>'
     t_LESS_THAN = r'<'
@@ -67,6 +71,9 @@ def make_psuedocode_lexer():
 
     t_DOUBLE_QUOTE = r'\"'
     t_SINGLE_QUOTE = r'\''
+
+    t_OPEN_BRACKET = r'\('
+    t_CLOSE_BRACKET = r'\)'
 
     def __init__(self):
         self.lexer = None
