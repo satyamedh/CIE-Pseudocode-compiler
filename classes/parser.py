@@ -31,6 +31,10 @@ def make_pseudocode_parser():
         '''statement : FOR VARIABLE ASSIGNMENT expression TO expression statement_list NEXT VARIABLE'''
         p[0] = ('for', p[2], p[4], p[6], p[7])
 
+    def p_statement_repeat(p):
+        '''statement : REPEAT statement_list UNTIL expression'''
+        p[0] = ('repeat', p[2], p[4])
+
     def p_statement_assign(p):
         '''statement : VARIABLE ASSIGNMENT expression'''
         p[0] = ('assign', p[1], p[3])
@@ -60,13 +64,13 @@ def make_pseudocode_parser():
                       | expression DIV expression
                       | expression AND expression
                       | expression OR expression
-                        | expression EQUAL expression
-                        | expression GREATER_THAN expression
-                        | expression LESS_THAN expression
-                        | expression GREATER_THAN_EQUAL expression
-                        | expression LESS_THAN_EQUAL expression
-                        | expression NOT_EQUAL expression
-                        | NOT expression
+                      | expression EQUAL expression
+                      | expression GREATER_THAN expression
+                      | expression LESS_THAN expression
+                      | expression GREATER_THAN_EQUAL expression
+                      | expression LESS_THAN_EQUAL expression
+                      | expression NOT_EQUAL expression
+                      | NOT expression
                       | OPEN_BRACKET expression CLOSE_BRACKET
                       '''
         if len(p) == 4:
@@ -75,9 +79,8 @@ def make_pseudocode_parser():
             else:
                 p[0] = ('binop', p[2], p[1], p[3])
         elif len(p) == 3:
-            p[0] = p[2]
-        else:  # NOT
             p[0] = ('binop', p[1], p[2])
+
 
     def p_expression_number(p):
         '''expression : NUMBER'''

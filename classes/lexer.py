@@ -23,6 +23,8 @@ reserved = {
     'NOT': 'NOT',
     'CHAR': 'CHAR',
     'REAL': 'REAL',
+    'REPEAT': 'REPEAT',
+    'UNTIL': 'UNTIL',
 }
 
 tokens = (

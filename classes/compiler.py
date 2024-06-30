@@ -1,5 +1,5 @@
 import os
-
+import random
 
 class PseudocodeCompiler:
 
@@ -36,7 +36,7 @@ class PseudocodeCompiler:
         'REAL': 'float'
     }
 
-    def __init__(self, cpp_file: str = "temp/temp.cpp", output_file: str = "temp/temp"):
+    def __init__(self, cpp_file: str = "temp/temp.cpp", output_file: str = "temp/temp", random_seed: int = 42):
         self.ast = None
         self.cpp_code = ""
 
@@ -44,11 +44,24 @@ class PseudocodeCompiler:
         self.output_file = output_file
         self.variables = {}
 
+        random.seed(random_seed)
+
+        self.generated_randoms = []
+
+    def generate_random(self):
+        random_num = random.randint(0, 1000)
+        while random_num in self.generated_randoms:
+            random_num = random.randint(0, 1000)
+        self.generated_randoms.append(random_num)
+        return random_num
+
 
     def walk(self, node):
         # node could be a tuple or a list of tuples
         if isinstance(node, tuple):
             if node[0] == 'binop':
+                if node[1] == 'NOT':
+                    return f'!{self.walk(node[2])}'
                 return f'({self.walk(node[2])} {self.binop_cond_psc_to_cpp[node[1]]} {self.walk(node[3])})'
             elif node[0] == 'number':
                 return str(node[1])
@@ -81,6 +94,15 @@ class PseudocodeCompiler:
                 return f'if ({self.walk(node[1])}) {{\n{self.walk(node[2])}\n}} else {{\n{self.walk(node[3])}\n}}'
             elif node[0] == 'if_no_else':
                 return f'if ({self.walk(node[1])}) {{\n{self.walk(node[2])}\n}}'
+            elif node[0] == 'repeat':
+                random_num = self.generate_random()
+                return f'''
+                bool {node[0]}_cond_{random_num} = true;
+                while ({node[0]}_cond_{random_num}) {{
+                    {self.walk(node[1])}
+                    {node[0]}_cond_{random_num} = !({self.walk(node[2])});
+                }}
+                '''
             elif node[0] == 'for':
                 return f'for (int {node[1]} = {self.walk(node[2])}; {node[1]} <= {self.walk(node[3])}; {node[1]}++) {{\n{self.walk(node[4])}\n}}'
             elif node[0] == 'condition':
