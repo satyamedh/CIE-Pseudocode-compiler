@@ -47,6 +47,10 @@ def make_pseudocode_parser():
         '''statement : IF expression THEN statement_list ENDIF'''
         p[0] = ('if_no_else', p[2], p[4])
 
+    def p_statement_while(p):
+        '''statement : WHILE expression statement_list ENDWHILE'''
+        p[0] = ('while', p[2], p[3])
+
     def p_statement_print(p):
         '''statement : PRINT expression'''
         p[0] = ('print', p[2])
@@ -109,7 +113,7 @@ def make_pseudocode_parser():
 
     def p_error(p):
         if p:
-            print(f"Syntax error at '{p.value}'")
+            print(f"Syntax error at '{p.value}' at line {p.lineno} column {p.lexpos}")
         else:
             print("Syntax error at EOF")
 

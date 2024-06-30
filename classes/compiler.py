@@ -36,6 +36,14 @@ class PseudocodeCompiler:
         'REAL': 'float'
     }
 
+    declare_defaults = {
+        'INTEGER': 0,
+        'STRING': '""',
+        'BOOLEAN': 'false',
+        'CHAR': "' '",
+        'REAL': 0.0
+    }
+
     def __init__(self, cpp_file: str = "temp/temp.cpp", output_file: str = "temp/temp", random_seed: int = 42):
         self.ast = None
         self.cpp_code = ""
@@ -103,6 +111,8 @@ class PseudocodeCompiler:
                     {node[0]}_cond_{random_num} = !({self.walk(node[2])});
                 }}
                 '''
+            elif node[0] == 'while':
+                return f'while ({self.walk(node[1])}) {{\n{self.walk(node[2])}\n}}'
             elif node[0] == 'for':
                 return f'for (int {node[1]} = {self.walk(node[2])}; {node[1]} <= {self.walk(node[3])}; {node[1]}++) {{\n{self.walk(node[4])}\n}}'
             elif node[0] == 'condition':
@@ -115,7 +125,7 @@ class PseudocodeCompiler:
                 return '\n'.join([self.walk(child) for child in node[1]])
             elif node[0] == 'declare':
                 self.variables[node[1]] = node[2]
-                return f'{self.datatypes_to_cpp[node[2]]} {node[1]};'
+                return f'{self.datatypes_to_cpp[node[2]]} {node[1]} = {self.declare_defaults[node[2]]};'
         elif isinstance(node, list):
             if not node:
                 return ""

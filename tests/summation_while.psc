@@ -1,0 +1,12 @@
+DECLARE num: INTEGER
+
+INPUT num
+
+DECLARE i: INTEGER
+DECLARE SUM: INTEGER
+WHILE i < num
+    SUM <- SUM + i
+    i <- i + 1
+ENDWHILE
+
+OUTPUT SUM

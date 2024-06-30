@@ -54,7 +54,7 @@ if args.debug:
     print(c_code)
 
 # Write and compile the C code
-compiler.cpp_file = args.cfile or 'temp/temp.c'
+compiler.cpp_file = args.cfile or 'temp/temp.cpp'
 compiler.output_file = args.output or 'temp/temp'
 
 print("Writing to file")

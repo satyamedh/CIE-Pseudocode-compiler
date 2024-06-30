@@ -29,6 +29,7 @@ I then use the AST to generate C++ code, and call `g++` to compile the generated
   - `IF` statements (with or without `ELSE`)
   - `REPEAT` loops
   - `FOR` loops
+  - `WHILE` loops
   - All data types except `DATE`
   - All variable types except `CONSTANT`
   - `OUTPUT` and `INPUT` statements

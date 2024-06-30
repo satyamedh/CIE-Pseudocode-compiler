@@ -25,6 +25,8 @@ reserved = {
     'REAL': 'REAL',
     'REPEAT': 'REPEAT',
     'UNTIL': 'UNTIL',
+    'WHILE': 'WHILE',
+    'ENDWHILE': 'ENDWHILE',
 }
 
 tokens = (
@@ -103,7 +105,7 @@ def make_psuedocode_lexer():
         t.lexer.lineno += len(t.value)
 
     def t_error(t):
-        print(f"Illegal character {t.value[0]!r}")
+        print(f"Illegal character {t.value[0]!r} at line {t.lineno} column {t.lexpos}")
         t.lexer.skip(1)
 
     def t_COMMENT(t):
