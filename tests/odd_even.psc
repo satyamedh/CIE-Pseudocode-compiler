@@ -1,6 +1,6 @@
 DECLARE x: INTEGER
 INPUT x
-IF x MOD 2 = 0 THEN
+IF (x MOD 2) = 0 THEN
     OUTPUT "Even"
 ELSE
     OUTPUT "Odd"
