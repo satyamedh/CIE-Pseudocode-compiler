@@ -43,8 +43,8 @@ tokens = (
     "EQUAL",
     "VARIABLE",
     "NUMBER",
-    "DOUBLE_QUOTE",
-    "SINGLE_QUOTE",
+    # "DOUBLE_QUOTE",
+    # "SINGLE_QUOTE",
     "STRING_DATA",
     "CHAR_DATA",
     "REAL_NUMBER",
@@ -73,8 +73,8 @@ def make_psuedocode_lexer():
     t_MULTIPLY = r'\*'
     t_DIVIDE = r'\/'
 
-    t_DOUBLE_QUOTE = r'\"'
-    t_SINGLE_QUOTE = r'\''
+    # t_DOUBLE_QUOTE = r'\"'
+    # t_SINGLE_QUOTE = r'\''
 
     t_OPEN_BRACKET = r'\('
     t_CLOSE_BRACKET = r'\)'
