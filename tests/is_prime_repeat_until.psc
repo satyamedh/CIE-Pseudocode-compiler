@@ -4,7 +4,7 @@ DECLARE PRIME_FLAG: BOOLEAN
 PRIME_FLAG <- TRUE
 INPUT num
 
-IF (num = 2) or (num = 1) THEN
+IF (num = 2) OR (num = 1) THEN
     PRIME_FLAG <- FALSE
 ENDIF
 
