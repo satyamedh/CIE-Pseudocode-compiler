@@ -1,5 +1,7 @@
 import os
 import argparse
+
+from classes.general_functions import eprint
 from classes.lexer import make_psuedocode_lexer
 from classes.parser import make_pseudocode_parser
 from classes.compiler import PseudocodeCompiler
@@ -60,7 +62,15 @@ compiler.output_file = args.output or 'temp/temp'
 print("Writing to file")
 compiler.write_to_file()
 print("Compiling with gcc")
-compiler.invoke_gcc()
+res, stderr = compiler.invoke_gcc()
+if not res:
+    eprint("Compilation failed")
+    eprint("==== STDERR from g++ ====")
+    eprint(stderr)
+    eprint("==== C CODE ====")
+    eprint(c_code)
+    eprint("========")
+    exit(3)
 
 # Run the compiled file if needed
 if args.run:

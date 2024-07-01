@@ -23,7 +23,9 @@ def test_program(file_name):
     compiler_process = subprocess.Popen(['python', 'main.py', f'tests/{file_name}.psc', '-o', 'temp/temp', '-c',
                                          'temp/temp.c'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     stdout, stderr = compiler_process.communicate()
-    if stderr:
+    # get exit code
+    result = compiler_process.returncode
+    if result != 0:
         print("====================================")
         print(f"Compilation might've failed for {file_name}")
         print(stderr)

@@ -1,5 +1,7 @@
 import os
 import random
+import subprocess
+
 
 class PseudocodeCompiler:
 
@@ -211,7 +213,13 @@ class PseudocodeCompiler:
             os.mkdir(os.path.dirname(self.output_file))
         except FileExistsError:
             pass
-        os.system(f'g++ {self.cpp_file} -o {self.output_file}')
+
+        process = subprocess.Popen(['g++', self.cpp_file, '-o', self.output_file], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        stdout, stderr = process.communicate()
+        if stderr:
+            return False, stderr
+        return True, None
+
 
     def reset(self):
         self.ast = None
