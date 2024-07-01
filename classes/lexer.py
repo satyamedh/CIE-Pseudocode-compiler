@@ -27,6 +27,9 @@ reserved = {
     'UNTIL': 'UNTIL',
     'WHILE': 'WHILE',
     'ENDWHILE': 'ENDWHILE',
+    'PROCEDURE': 'PROCEDURE',
+    'ENDPROCEDURE': 'ENDPROCEDURE',
+    'CALL': 'CALL',
 }
 
 tokens = (

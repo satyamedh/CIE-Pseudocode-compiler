@@ -23,6 +23,14 @@ def make_pseudocode_parser():
                      | REAL'''
         p[0] = p[1]
 
+    def p_procedure_no_params(p):
+        '''statement : PROCEDURE VARIABLE OPEN_BRACKET CLOSE_BRACKET statement_list ENDPROCEDURE'''
+        p[0] = ('procedure_no_param', p[2], p[5])
+
+    def p_call_procedure_no_param(p):
+        '''statement : CALL VARIABLE OPEN_BRACKET CLOSE_BRACKET'''
+        p[0] = ('call_procedure_no_param', p[2])
+
     def p_statement_declare(p):
         '''statement : DECLARE VARIABLE COLON data_type'''
         p[0] = ('declare', p[2], p[4])

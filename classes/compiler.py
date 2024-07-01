@@ -50,11 +50,15 @@ class PseudocodeCompiler:
 
         self.cpp_file = cpp_file
         self.output_file = output_file
+
         self.variables = {}
+        self.procedures = []
 
         random.seed(random_seed)
 
         self.generated_randoms = []
+
+        self.main_body_flag = True
 
     def generate_random(self):
         random_num = random.randint(0, 1000)
@@ -62,6 +66,10 @@ class PseudocodeCompiler:
             random_num = random.randint(0, 1000)
         self.generated_randoms.append(random_num)
         return random_num
+
+    def set_main_body_flag(self, flag):
+        self.main_body_flag = flag
+        return ''
 
 
     def walk(self, node):
@@ -87,6 +95,18 @@ class PseudocodeCompiler:
                 return f'''
                 std::cout << {self.walk(node[1])} << std::endl;                
                 '''
+            elif node[0] == 'procedure_no_param':
+                if self.main_body_flag:
+                    self.procedures.append(node)
+                    return ''
+                else:
+                    return f'''
+                    void {node[1]}() {{
+                        {self.walk(node[2])}
+                    }}
+                    '''
+            elif node[0] == 'call_procedure_no_param':
+                return f'{node[1]}();'
             elif node[0] == 'input':
                 # get the datatype of the variable
                 datatype = self.variables[node[1]]
@@ -136,6 +156,12 @@ class PseudocodeCompiler:
     def compile_to_cpp(self):
         if self.ast is None:
             raise ValueError("AST is None")
+
+        main_body_code = self.walk(self.ast)
+
+        self.set_main_body_flag(False)
+        procedure_code = '\n'.join([self.walk(proc) for proc in self.procedures])
+
         cpp_code = f"""
         #include <cstdlib>
         #include <cstring>
@@ -150,11 +176,13 @@ class PseudocodeCompiler:
         return str == "true";
         }}
         
+        {procedure_code}        
         
         int main() {{
-        {self.walk(self.ast)}
+            {main_body_code}
         return 0;
         }}
+        
         """
 
         # Prettify the code

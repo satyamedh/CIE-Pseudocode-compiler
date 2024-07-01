@@ -38,6 +38,8 @@ I then use the AST to generate C++ code, and call `g++` to compile the generated
   - All comparison operators
   - `DECLARE` and `<-` assignment operators
   - More things I can't remember right now
+  - `PROCEDURE` definitions without parameters
+  - `CALL` statements without parameters
 - Haven't tested on linux or mac yet, probably won't work
 
 ## Usage
