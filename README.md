@@ -33,6 +33,7 @@ I then use the AST to generate C++ code, and call `g++` to compile the generated
   - All data types except `DATE`
   - All variable types except `CONSTANT`
   - `OUTPUT` and `INPUT` statements
+  - Multi-expression `OUTPUT` statements
   - All arithmetic operators
   - `AND`, `OR`, `NOT` logical operators
   - All comparison operators
