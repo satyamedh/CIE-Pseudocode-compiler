@@ -31,9 +31,42 @@ def make_pseudocode_parser():
         '''statement : CALL VARIABLE OPEN_BRACKET CLOSE_BRACKET'''
         p[0] = ('call_procedure_no_param', p[2])
 
+
     def p_statement_declare(p):
         '''statement : DECLARE VARIABLE COLON data_type'''
         p[0] = ('declare', p[2], p[4])
+
+    def p_parameter(p):
+        '''parameter : VARIABLE COLON data_type'''
+        p[0] = ('parameter', p[1], p[3])
+
+    def p_parameters(p):
+        '''parameters : parameter
+                      | parameters COMMA parameter'''
+        if len(p) == 2:
+            p[0] = [p[1]]
+        else:
+            p[0] = p[1] + [p[3]]
+
+    def p_function_with_params(p):
+        '''statement : FUNCTION VARIABLE OPEN_BRACKET parameters CLOSE_BRACKET RETURNS data_type statement_list ENDFUNCTION'''
+        p[0] = ('function_with_params', p[2], p[4], p[7], p[8])
+
+    def p_return_statement(p):
+        '''statement : RETURN expression'''
+        p[0] = ('return', p[2])
+
+    def p_expression_list(p):
+        '''expression_list : expression
+                           | expression_list COMMA expression'''
+        if len(p) == 2:
+            p[0] = [p[1]]
+        else:
+            p[0] = p[1] + [p[3]]
+
+    def p_run_function_with_params(p):
+        '''expression : VARIABLE OPEN_BRACKET expression_list CLOSE_BRACKET'''
+        p[0] = ('run_function_with_params', p[1], p[3])
 
     def p_statement_for(p):
         '''statement : FOR VARIABLE ASSIGNMENT expression TO expression statement_list NEXT VARIABLE'''

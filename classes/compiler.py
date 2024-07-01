@@ -122,6 +122,10 @@ class PseudocodeCompiler:
                     '''
             elif node[0] == 'if':
                 return f'if ({self.walk(node[1])}) {{\n{self.walk(node[2])}\n}} else {{\n{self.walk(node[3])}\n}}'
+            elif node[0] == 'return':
+                return f'return {self.walk(node[1])};'
+            elif node[0] == 'run_function_with_params':
+                return f'{node[1]}({", ".join([self.walk(param) for param in node[2]])})'
             elif node[0] == 'if_no_else':
                 return f'if ({self.walk(node[1])}) {{\n{self.walk(node[2])}\n}}'
             elif node[0] == 'repeat':
@@ -133,6 +137,16 @@ class PseudocodeCompiler:
                     {node[0]}_cond_{random_num} = !({self.walk(node[2])});
                 }}
                 '''
+            elif node[0] == 'function_with_params':
+                if self.main_body_flag:
+                    self.procedures.append(node)
+                    return ''
+                else:
+                    return f'''
+                    {self.datatypes_to_cpp[node[3]]} {node[1]}({', '.join([f'{self.datatypes_to_cpp[param[2]]} {param[1]}' for param in node[2]])}) {{
+                        {self.walk(node[4])}
+                    }}
+                    '''
             elif node[0] == 'while':
                 return f'while ({self.walk(node[1])}) {{\n{self.walk(node[2])}\n}}'
             elif node[0] == 'for':

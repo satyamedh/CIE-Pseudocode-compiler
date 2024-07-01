@@ -30,6 +30,10 @@ reserved = {
     'PROCEDURE': 'PROCEDURE',
     'ENDPROCEDURE': 'ENDPROCEDURE',
     'CALL': 'CALL',
+    'FUNCTION': 'FUNCTION',
+    'ENDFUNCTION': 'ENDFUNCTION',
+    'RETURN': 'RETURN',
+    'RETURNS': 'RETURNS',
 }
 
 tokens = (
@@ -53,7 +57,8 @@ tokens = (
     "REAL_NUMBER",
     "OPEN_BRACKET",
     "CLOSE_BRACKET",
-    "NOT_EQUAL"
+    "NOT_EQUAL",
+    "COMMA"
 ) + tuple(reserved.values())
 
 
@@ -81,6 +86,8 @@ def make_psuedocode_lexer():
 
     t_OPEN_BRACKET = r'\('
     t_CLOSE_BRACKET = r'\)'
+
+    t_COMMA = r','
 
     def __init__(self):
         self.lexer = None
