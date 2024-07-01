@@ -52,6 +52,14 @@ def make_pseudocode_parser():
         '''statement : FUNCTION VARIABLE OPEN_BRACKET parameters CLOSE_BRACKET RETURNS data_type statement_list ENDFUNCTION'''
         p[0] = ('function_with_params', p[2], p[4], p[7], p[8])
 
+    def p_procedure_with_params(p):
+        '''statement : PROCEDURE VARIABLE OPEN_BRACKET parameters CLOSE_BRACKET statement_list ENDPROCEDURE'''
+        p[0] = ('procedure_with_params', p[2], p[4], p[6])
+
+    def p_call_procedure_with_params(p):
+        '''statement : CALL VARIABLE OPEN_BRACKET expression_list CLOSE_BRACKET'''
+        p[0] = ('call_procedure_with_params', p[2], p[4])
+
     def p_return_statement(p):
         '''statement : RETURN expression'''
         p[0] = ('return', p[2])
