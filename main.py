@@ -47,8 +47,12 @@ if args.debug:
     print(ast)
 
 # Compile the code
-print("Compiling")
 compiler.ast = ast
+if ast is None:
+    eprint("Parsing failed, look for syntax errors")
+    exit(2)
+
+print("Compiling")
 compiler.compile_to_cpp()
 c_code = compiler.cpp_code
 if args.debug:

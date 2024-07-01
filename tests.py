@@ -28,6 +28,9 @@ def test_program(file_name):
     if result != 0:
         print("====================================")
         print(f"Compilation might've failed for {file_name}")
+        print("==== STDOUT ====")
+        print(stdout)
+        print("==== STDERR ====")
         print(stderr)
         print("====================================")
         return
