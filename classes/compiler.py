@@ -171,6 +171,16 @@ class PseudocodeCompiler:
                         {self.walk(node[3])}
                     }}
                     '''
+
+            elif node[0] == 'print_multiple':
+                # Evaluate each expression, print with no separator
+                codee = 'std::cout << '
+                for i, expr in enumerate(node[1]):
+                    codee += f'{self.walk(expr)}'
+                    if i != len(node[1]) - 1:
+                        codee += ' << '
+                codee += ' << std::endl;'
+                return codee
             elif node[0] == 'while':
                 return f'while ({self.walk(node[1])}) {{\n{self.walk(node[2])}\n}}'
             elif node[0] == 'for':
