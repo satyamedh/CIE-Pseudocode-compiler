@@ -1,5 +1,6 @@
 import os
 import importlib
+import shutil
 import subprocess
 import json
 
@@ -15,7 +16,7 @@ def test_program(file_name):
     # each trial is a list of inputs and expected outputs
 
     # Delete the temp directory
-    os.system('rmdir /s /q temp')
+    shutil.rmtree('temp', ignore_errors=True)
 
     # run the main.py file with the input
     # os.system(f'python main.py tests/{file_name}.psc -o temp/temp -c temp/temp.c')
