@@ -40,6 +40,8 @@ reserved = {
     'MID': 'MID',
     'LCASE': 'LCASE',
     'UCASE': 'UCASE',
+    'INT': 'INT',
+    'RAND': 'RAND',
 }
 
 tokens = (

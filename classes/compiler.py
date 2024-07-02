@@ -216,6 +216,7 @@ class PseudocodeCompiler:
         #include <cstring>
         #include <iostream>
         #include <cctype>
+        #include <random>
         
         // Helper functions
         bool string_to_bool(std::string str) {{
@@ -251,6 +252,20 @@ class PseudocodeCompiler:
         
         int INT(int x) {{
             return x;
+        }}
+        
+        // Create a random device
+        std::random_device rd;
+    
+        // Seed the random number generator
+        std::mt19937 gen(rd());
+    
+        // Define the distribution, which in this case is a uniform real distribution between 0 and 1
+        std::uniform_real_distribution<> dis(0.0, 1.0);
+        
+        float RAND(float x) {{
+            double random_value = dis(gen);
+            return (float) random_value * x;
         }}
         
         

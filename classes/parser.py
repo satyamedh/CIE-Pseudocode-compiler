@@ -85,6 +85,8 @@ def make_pseudocode_parser():
                         | MID OPEN_BRACKET expression_list CLOSE_BRACKET
                         | LCASE OPEN_BRACKET expression_list CLOSE_BRACKET
                         | UCASE OPEN_BRACKET expression_list CLOSE_BRACKET
+                        | INT OPEN_BRACKET expression_list CLOSE_BRACKET
+                        | RAND OPEN_BRACKET expression_list CLOSE_BRACKET
 
         '''
 

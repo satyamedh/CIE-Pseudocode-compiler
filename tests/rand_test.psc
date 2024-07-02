@@ -1,0 +1,1 @@
+OUTPUT RAND(69)
