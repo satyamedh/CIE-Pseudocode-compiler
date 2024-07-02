@@ -1,0 +1,8 @@
+{
+  "trials": [
+    ["abcdef", "efabd"],
+    ["abcdefgh", "ghabd"],
+    ["hahahaha", "hahaa"],
+    ["dadasdasfdsfsd", "sddaa"]
+  ]
+}

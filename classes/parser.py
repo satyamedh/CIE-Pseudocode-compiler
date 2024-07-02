@@ -78,7 +78,16 @@ def make_pseudocode_parser():
             p[0] = p[1] + [p[3]]
 
     def p_run_function_with_params(p):
-        '''expression : VARIABLE OPEN_BRACKET expression_list CLOSE_BRACKET'''
+        '''expression : VARIABLE OPEN_BRACKET expression_list CLOSE_BRACKET
+                        | LENGTH OPEN_BRACKET expression_list CLOSE_BRACKET
+                        | RIGHT OPEN_BRACKET expression_list CLOSE_BRACKET
+                        | LEFT OPEN_BRACKET expression_list CLOSE_BRACKET
+                        | MID OPEN_BRACKET expression_list CLOSE_BRACKET
+                        | LCASE OPEN_BRACKET expression_list CLOSE_BRACKET
+                        | UCASE OPEN_BRACKET expression_list CLOSE_BRACKET
+
+        '''
+
         p[0] = ('run_function_with_params', p[1], p[3])
 
     def p_run_function_no_params(p):
@@ -138,6 +147,7 @@ def make_pseudocode_parser():
                       | expression NOT_EQUAL expression
                       | NOT expression
                       | OPEN_BRACKET expression CLOSE_BRACKET
+                      | expression CONCATENATE expression
                       '''
         if len(p) == 4:
             if p[1] == '(':

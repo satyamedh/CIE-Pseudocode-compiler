@@ -34,6 +34,12 @@ reserved = {
     'ENDFUNCTION': 'ENDFUNCTION',
     'RETURN': 'RETURN',
     'RETURNS': 'RETURNS',
+    'RIGHT': 'RIGHT',
+    'LEFT': 'LEFT',
+    'LENGTH': 'LENGTH',
+    'MID': 'MID',
+    'LCASE': 'LCASE',
+    'UCASE': 'UCASE',
 }
 
 tokens = (
@@ -58,7 +64,8 @@ tokens = (
     "OPEN_BRACKET",
     "CLOSE_BRACKET",
     "NOT_EQUAL",
-    "COMMA"
+    "COMMA",
+    "CONCATENATE",
 ) + tuple(reserved.values())
 
 
@@ -88,6 +95,8 @@ def make_psuedocode_lexer():
     t_CLOSE_BRACKET = r'\)'
 
     t_COMMA = r','
+
+    t_CONCATENATE = r'&'
 
     def __init__(self):
         self.lexer = None

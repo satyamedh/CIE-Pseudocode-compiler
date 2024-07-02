@@ -4,7 +4,6 @@ import subprocess
 
 
 class PseudocodeCompiler:
-
     binop_cond_psc_to_cpp = {
         "=": "==",
         "<>": "!=",
@@ -20,7 +19,8 @@ class PseudocodeCompiler:
         "DIV": "/",
         "AND": "&&",
         "OR": "||",
-        "NOT": "!"
+        "NOT": "!",
+        "&": "+",
     }
 
     datatype_for_print = {
@@ -32,7 +32,7 @@ class PseudocodeCompiler:
 
     datatypes_to_cpp = {
         'INTEGER': 'int',
-        'STRING': 'char*',
+        'STRING': 'std::string',
         'BOOLEAN': 'bool',
         'CHAR': 'char',
         'REAL': 'float'
@@ -72,7 +72,6 @@ class PseudocodeCompiler:
     def set_main_body_flag(self, flag):
         self.main_body_flag = flag
         return ''
-
 
     def walk(self, node):
         # node could be a tuple or a list of tuples
@@ -226,6 +225,31 @@ class PseudocodeCompiler:
         return str == "true";
         }}
         
+        int LENGTH(std::string str) {{
+            return str.length();
+        }}
+        
+        std::string LEFT(std::string str, int n) {{
+            return str.substr(0, n);
+        }}
+        
+        std::string RIGHT(std::string str, int n) {{
+            return str.substr(str.length() - n);
+        }}
+        
+        std::string MID(std::string str, int start, int n) {{
+            return str.substr(start, n);
+        }}
+        
+        char LCASE(char ch) {{
+            return std::tolower(ch);
+        }}
+        
+        char UCASE(char ch) {{
+            return std::toupper(ch);
+        }}
+        
+        
         {procedure_code}        
         
         int main() {{
@@ -262,12 +286,12 @@ class PseudocodeCompiler:
         except FileExistsError:
             pass
 
-        process = subprocess.Popen(['g++', self.cpp_file, '-o', self.output_file], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        process = subprocess.Popen(['g++', self.cpp_file, '-o', self.output_file], stdout=subprocess.PIPE,
+                                   stderr=subprocess.PIPE, text=True)
         stdout, stderr = process.communicate()
         if stderr:
             return False, stderr
         return True, None
-
 
     def reset(self):
         self.ast = None
