@@ -1,0 +1,6 @@
+DECLARE x: REAL
+INPUT x
+
+OUTPUT INT(x)
+
+

@@ -249,6 +249,10 @@ class PseudocodeCompiler:
             return std::toupper(ch);
         }}
         
+        int INT(int x) {{
+            return x;
+        }}
+        
         
         {procedure_code}        
         
