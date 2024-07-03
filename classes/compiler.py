@@ -111,7 +111,7 @@ class PseudocodeCompiler:
             elif node[0] == 'input':
                 # get the datatype of the variable
                 datatype = self.variables[node[1]]
-                if datatype == 'STRING' or datatype == 'INTEGER' or datatype == 'REAL':
+                if datatype == 'STRING' or datatype == 'INTEGER' or datatype == 'REAL' or datatype == 'CHAR':
                     return f'std::cin >> {node[1]};'
                 if datatype == 'BOOLEAN':
                     return f'''
@@ -170,6 +170,31 @@ class PseudocodeCompiler:
                         {self.walk(node[3])}
                     }}
                     '''
+
+            elif node[0] == 'case_statement':
+                codee = f'''
+                switch ({node[1]}) {{
+                {self.walk(node[2])}
+                }}
+                '''
+
+                return codee
+
+            elif node[0] == 'case':
+                if node[1] == "OTHERWISE":
+                    return f'''
+                    default: {{
+                        {self.walk(node[2])}
+                    }}
+                    '''
+                codee = f'''
+                case {self.walk(node[1])}: {{
+                    {self.walk(node[2])}
+                    break;
+                }} 
+                '''
+                return codee
+            
 
             elif node[0] == 'print_multiple':
                 # Evaluate each expression, print with no separator

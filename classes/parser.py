@@ -64,6 +64,26 @@ def make_pseudocode_parser():
         '''statement : CALL VARIABLE OPEN_BRACKET expression_list CLOSE_BRACKET'''
         p[0] = ('call_procedure_with_params', p[2], p[4])
 
+    def p_case_statement(p):
+        '''statement : CASE OF VARIABLE case_list ENDCASE'''
+        p[0] = ('case_statement', p[3], p[4])
+
+    def p_case(p):
+        '''case : expression COLON statement_list
+                | OTHERWISE COLON statement_list
+        '''
+        p[0] = ('case', p[1], p[3])
+
+    def p_case_list(p):
+        '''case_list : case
+                     | case_list case
+        '''
+        if len(p) == 2:
+            p[0] = [p[1]]
+        else:
+            p[0] = p[1] + [p[2]]
+
+
 
     def p_return_statement(p):
         '''statement : RETURN expression'''

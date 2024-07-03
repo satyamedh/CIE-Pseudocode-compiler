@@ -42,6 +42,10 @@ reserved = {
     'UCASE': 'UCASE',
     'INT': 'INT',
     'RAND': 'RAND',
+    'CASE': 'CASE',
+    'OF': 'OF',
+    'ENDCASE': 'ENDCASE',
+    'OTHERWISE': 'OTHERWISE',
 }
 
 tokens = (
