@@ -76,150 +76,151 @@ class PseudocodeCompiler:
     def walk(self, node):
         # node could be a tuple or a list of tuples
         if isinstance(node, tuple):
-            if node[0] == 'binop':
-                if node[1] == 'NOT':
-                    return f'!{self.walk(node[2])}'
-                return f'({self.walk(node[2])} {self.binop_cond_psc_to_cpp[node[1]]} {self.walk(node[3])})'
-            elif node[0] == 'number':
-                return str(node[1])
-            elif node[0] == 'string':
-                return f'"{node[1]}"'
-            elif node[0] == 'char':
-                return f"'{node[1]}'"
-            elif node[0] == 'variable':
-                return node[1]
-            elif node[0] == 'boolean':
-                return str(node[1]).lower()
-            elif node[0] == 'assign':
-                return f'{node[1]} = {self.walk(node[2])};'
-            elif node[0] == 'print':
-                return f'''
-                std::cout << {self.walk(node[1])} << std::endl;                
-                '''
-            elif node[0] == 'procedure_no_param':
-                if self.main_body_flag:
-                    self.procedures.append(node)
-                    return ''
-                else:
+            match node[0]:
+                case 'binop':
+                    if node[1] == 'NOT':
+                        return f'!{self.walk(node[2])}'
+                    return f'({self.walk(node[2])} {self.binop_cond_psc_to_cpp[node[1]]} {self.walk(node[3])})'
+                case 'number':
+                    return str(node[1])
+                case 'string':
+                    return f'"{node[1]}"'
+                case 'char':
+                    return f"'{node[1]}'"
+                case 'variable':
+                    return node[1]
+                case 'boolean':
+                    return str(node[1]).lower()
+                case 'assign':
+                    return f'{node[1]} = {self.walk(node[2])};'
+                case 'print':
                     return f'''
-                    void {node[1]}() {{
-                        {self.walk(node[2])}
+                    std::cout << {self.walk(node[1])} << std::endl;                
+                    '''
+                case 'procedure_no_param':
+                    if self.main_body_flag:
+                        self.procedures.append(node)
+                        return ''
+                    else:
+                        return f'''
+                        void {node[1]}() {{
+                            {self.walk(node[2])}
+                        }}
+                        '''
+                case 'call_procedure_no_param':
+                    return f'{node[1]}();'
+                case 'input':
+                    # get the datatype of the variable
+                    datatype = self.variables[node[1]]
+                    if datatype == 'STRING' or datatype == 'INTEGER' or datatype == 'REAL' or datatype == 'CHAR':
+                        return f'std::cin >> {node[1]};'
+                    if datatype == 'BOOLEAN':
+                        return f'''
+                        std::string {node[1]}_str;
+                        std::cin >> {node[1]}_str;
+                        {node[1]} = string_to_bool({node[1]}_str);
+                        '''
+                case 'if':
+                    return f'if ({self.walk(node[1])}) {{\n{self.walk(node[2])}\n}} else {{\n{self.walk(node[3])}\n}}'
+                case 'return':
+                    return f'return {self.walk(node[1])};'
+                case 'run_function_with_params':
+                    return f'{node[1]}({", ".join([self.walk(param) for param in node[2]])})'
+                case 'procedure_with_params':
+                    if self.main_body_flag:
+                        self.procedures.append(node)
+                        return ''
+                    else:
+                        return f'''
+                        void {node[1]}({', '.join([f'{self.datatypes_to_cpp[param[2]]} {param[1]}' for param in node[2]])}) {{
+                            {self.walk(node[3])}
+                        }}
+                        '''
+                case 'call_procedure_with_params':
+                    return f'{node[1]}({", ".join([self.walk(param) for param in node[2]])});'
+                case 'run_function_no_params':
+                    return f'{node[1]}()'
+                case 'if_no_else':
+                    return f'if ({self.walk(node[1])}) {{\n{self.walk(node[2])}\n}}'
+                case 'repeat':
+                    random_num = self.generate_random()
+                    return f'''
+                    bool {node[0]}_cond_{random_num} = true;
+                    while ({node[0]}_cond_{random_num}) {{
+                        {self.walk(node[1])}
+                        {node[0]}_cond_{random_num} = !({self.walk(node[2])});
                     }}
                     '''
-            elif node[0] == 'call_procedure_no_param':
-                return f'{node[1]}();'
-            elif node[0] == 'input':
-                # get the datatype of the variable
-                datatype = self.variables[node[1]]
-                if datatype == 'STRING' or datatype == 'INTEGER' or datatype == 'REAL' or datatype == 'CHAR':
-                    return f'std::cin >> {node[1]};'
-                if datatype == 'BOOLEAN':
-                    return f'''
-                    std::string {node[1]}_str;
-                    std::cin >> {node[1]}_str;
-                    {node[1]} = string_to_bool({node[1]}_str);
-                    '''
-            elif node[0] == 'if':
-                return f'if ({self.walk(node[1])}) {{\n{self.walk(node[2])}\n}} else {{\n{self.walk(node[3])}\n}}'
-            elif node[0] == 'return':
-                return f'return {self.walk(node[1])};'
-            elif node[0] == 'run_function_with_params':
-                return f'{node[1]}({", ".join([self.walk(param) for param in node[2]])})'
-            elif node[0] == 'procedure_with_params':
-                if self.main_body_flag:
-                    self.procedures.append(node)
-                    return ''
-                else:
-                    return f'''
-                    void {node[1]}({', '.join([f'{self.datatypes_to_cpp[param[2]]} {param[1]}' for param in node[2]])}) {{
-                        {self.walk(node[3])}
-                    }}
-                    '''
-            elif node[0] == 'call_procedure_with_params':
-                return f'{node[1]}({", ".join([self.walk(param) for param in node[2]])});'
-            elif node[0] == 'run_function_no_params':
-                return f'{node[1]}()'
-            elif node[0] == 'if_no_else':
-                return f'if ({self.walk(node[1])}) {{\n{self.walk(node[2])}\n}}'
-            elif node[0] == 'repeat':
-                random_num = self.generate_random()
-                return f'''
-                bool {node[0]}_cond_{random_num} = true;
-                while ({node[0]}_cond_{random_num}) {{
-                    {self.walk(node[1])}
-                    {node[0]}_cond_{random_num} = !({self.walk(node[2])});
-                }}
-                '''
-            elif node[0] == 'function_with_params':
-                if self.main_body_flag:
-                    self.procedures.append(node)
-                    return ''
-                else:
-                    return f'''
-                    {self.datatypes_to_cpp[node[3]]} {node[1]}({', '.join([f'{self.datatypes_to_cpp[param[2]]} {param[1]}' for param in node[2]])}) {{
-                        {self.walk(node[4])}
-                    }}
-                    '''
-            elif node[0] == 'function_no_params':
-                if self.main_body_flag:
-                    self.procedures.append(node)
-                    return ''
-                else:
-                    return f'''
-                    {self.datatypes_to_cpp[node[2]]} {node[1]}() {{
-                        {self.walk(node[3])}
-                    }}
-                    '''
-
-            elif node[0] == 'case_statement':
-                codee = f'''
-                switch ({node[1]}) {{
-                {self.walk(node[2])}
-                }}
-                '''
-
-                return codee
-
-            elif node[0] == 'case':
-                if node[1] == "OTHERWISE":
-                    return f'''
-                    default: {{
-                        {self.walk(node[2])}
-                    }}
-                    '''
-                codee = f'''
-                case {self.walk(node[1])}: {{
+                case 'function_with_params':
+                    if self.main_body_flag:
+                        self.procedures.append(node)
+                        return ''
+                    else:
+                        return f'''
+                        {self.datatypes_to_cpp[node[3]]} {node[1]}({', '.join([f'{self.datatypes_to_cpp[param[2]]} {param[1]}' for param in node[2]])}) {{
+                            {self.walk(node[4])}
+                        }}
+                        '''
+                case 'function_no_params':
+                    if self.main_body_flag:
+                        self.procedures.append(node)
+                        return ''
+                    else:
+                        return f'''
+                        {self.datatypes_to_cpp[node[2]]} {node[1]}() {{
+                            {self.walk(node[3])}
+                        }}
+                        '''
+    
+                case 'case_statement':
+                    codee = f'''
+                    switch ({node[1]}) {{
                     {self.walk(node[2])}
-                    break;
-                }} 
-                '''
-                return codee
-            
-
-            elif node[0] == 'print_multiple':
-                # Evaluate each expression, print with no separator
-                codee = 'std::cout << '
-                for i, expr in enumerate(node[1]):
-                    codee += f'{self.walk(expr)}'
-                    if i != len(node[1]) - 1:
-                        codee += ' << '
-                codee += ' << std::endl;'
-                return codee
-            elif node[0] == 'while':
-                return f'while ({self.walk(node[1])}) {{\n{self.walk(node[2])}\n}}'
-            elif node[0] == 'for':
-                return f'for (int {node[1]} = {self.walk(node[2])}; {node[1]} <= {self.walk(node[3])}; {node[1]}++) {{\n{self.walk(node[4])}\n}}'
-            elif node[0] == 'condition':
-                if node[1] == 'NOT':
-                    return f'!{self.walk(node[2])}'
-                return f'({self.walk(node[2])} {self.binop_cond_psc_to_cpp[node[1]]} {self.walk(node[3])})'
-            elif node[0] == 'program':
-                if not node[1]:
-                    return ""
-                return '\n'.join([self.walk(child) for child in node[1]])
-            elif node[0] == 'declare':
-                self.variables[node[1]] = node[2]
-                return f'{self.datatypes_to_cpp[node[2]]} {node[1]} = {self.declare_defaults[node[2]]};'
+                    }}
+                    '''
+    
+                    return codee
+    
+                case 'case':
+                    if node[1] == "OTHERWISE":
+                        return f'''
+                        default: {{
+                            {self.walk(node[2])}
+                        }}
+                        '''
+                    codee = f'''
+                    case {self.walk(node[1])}: {{
+                        {self.walk(node[2])}
+                        break;
+                    }} 
+                    '''
+                    return codee
+                
+    
+                case 'print_multiple':
+                    # Evaluate each expression, print with no separator
+                    codee = 'std::cout << '
+                    for i, expr in enumerate(node[1]):
+                        codee += f'{self.walk(expr)}'
+                        if i != len(node[1]) - 1:
+                            codee += ' << '
+                    codee += ' << std::endl;'
+                    return codee
+                case 'while':
+                    return f'while ({self.walk(node[1])}) {{\n{self.walk(node[2])}\n}}'
+                case 'for':
+                    return f'for (int {node[1]} = {self.walk(node[2])}; {node[1]} <= {self.walk(node[3])}; {node[1]}++) {{\n{self.walk(node[4])}\n}}'
+                case 'condition':
+                    if node[1] == 'NOT':
+                        return f'!{self.walk(node[2])}'
+                    return f'({self.walk(node[2])} {self.binop_cond_psc_to_cpp[node[1]]} {self.walk(node[3])})'
+                case 'program':
+                    if not node[1]:
+                        return ""
+                    return '\n'.join([self.walk(child) for child in node[1]])
+                case 'declare':
+                    self.variables[node[1]] = node[2]
+                    return f'{self.datatypes_to_cpp[node[2]]} {node[1]} = {self.declare_defaults[node[2]]};'
         elif isinstance(node, list):
             if not node:
                 return ""
