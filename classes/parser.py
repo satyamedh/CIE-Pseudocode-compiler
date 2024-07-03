@@ -36,6 +36,10 @@ def make_pseudocode_parser():
         '''statement : DECLARE VARIABLE COLON data_type'''
         p[0] = ('declare', p[2], p[4])
 
+    def p_statement_declare_array(p):
+        '''statement : DECLARE VARIABLE COLON ARRAY OPEN_SQUARE_BRACKET NUMBER COLON NUMBER CLOSE_SQUARE_BRACKET OF data_type'''
+        p[0] = ('declare_array', p[2], p[6], p[8], p[11])
+
     def p_parameter(p):
         '''parameter : VARIABLE COLON data_type'''
         p[0] = ('parameter', p[1], p[3])
@@ -128,6 +132,10 @@ def make_pseudocode_parser():
         '''statement : VARIABLE ASSIGNMENT expression'''
         p[0] = ('assign', p[1], p[3])
 
+    def p_statement_assign_array(p):
+        '''statement : VARIABLE OPEN_SQUARE_BRACKET expression CLOSE_SQUARE_BRACKET ASSIGNMENT expression'''
+        p[0] = ('assign_array', p[1], p[3], p[6])
+
     def p_statement_if(p):
         '''statement : IF expression THEN statement_list ELSE statement_list ENDIF'''
         p[0] = ('if', p[2], p[4], p[6])
@@ -204,6 +212,10 @@ def make_pseudocode_parser():
         '''expression : TRUE
                       | FALSE'''
         p[0] = ('boolean', p[1])
+
+    def p_expression_array(p):
+        '''expression : VARIABLE OPEN_SQUARE_BRACKET expression CLOSE_SQUARE_BRACKET'''
+        p[0] = ('array_index', p[1], p[3])
 
     def p_error(p):
         if p:

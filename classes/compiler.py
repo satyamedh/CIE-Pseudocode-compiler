@@ -195,6 +195,24 @@ class PseudocodeCompiler:
                     }} 
                     '''
                     return codee
+
+                case 'declare_array':
+                    self.variables[node[1]] = {
+                        'type': node[4],
+                        'length': node[3],
+                        'starting': node[2]
+                    }
+                    length = (node[3] - node[2]) + 1
+                    return f'{self.datatypes_to_cpp[node[4]]} {node[1]}[{length}];'
+
+                case 'assign_array':
+                    index = f'{self.walk(node[2])} - {self.variables[node[1]]["starting"]}'
+                    return f'{node[1]}[{index}] = {self.walk(node[3])};'
+
+                case 'array_index':
+                    index = f'{self.walk(node[2])} - {self.variables[node[1]]["starting"]}'
+                    return f'{node[1]}[{index}]'
+
                 
     
                 case 'print_multiple':

@@ -46,6 +46,7 @@ reserved = {
     'OF': 'OF',
     'ENDCASE': 'ENDCASE',
     'OTHERWISE': 'OTHERWISE',
+    'ARRAY': 'ARRAY',
 }
 
 tokens = (
@@ -72,6 +73,8 @@ tokens = (
     "NOT_EQUAL",
     "COMMA",
     "CONCATENATE",
+    "OPEN_SQUARE_BRACKET",
+    "CLOSE_SQUARE_BRACKET",
 ) + tuple(reserved.values())
 
 
@@ -99,6 +102,9 @@ def make_psuedocode_lexer():
 
     t_OPEN_BRACKET = r'\('
     t_CLOSE_BRACKET = r'\)'
+
+    t_OPEN_SQUARE_BRACKET = r'\['
+    t_CLOSE_SQUARE_BRACKET = r'\]'
 
     t_COMMA = r','
 
