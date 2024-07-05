@@ -216,13 +216,31 @@ class PseudocodeCompiler:
                     return f'{node[1]}[{index}]'
 
                 case 'open_file':
-                    return f'''
-                        std::ifstream {remove_quotes(make_string_variable_friendly(self.walk(node[1])))}_file_handle({self.walk(node[1])}); // Open the file
-                        if (!{remove_quotes(make_string_variable_friendly(self.walk(node[1])))}_file_handle.is_open()) {{
-                            std::cerr << "Unable to open file: " << {self.walk(node[1])} << std::endl;
-                            return 1;
-                        }}
-                    '''
+                    file_handle_type = node[2]
+                    if file_handle_type == 'READ':
+                        return f'''
+                            std::ifstream {remove_quotes(make_string_variable_friendly(self.walk(node[1])))}_file_handle({self.walk(node[1])}); // Open the file
+                            if (!{remove_quotes(make_string_variable_friendly(self.walk(node[1])))}_file_handle.is_open()) {{
+                                std::cerr << "Unable to open file: " << {self.walk(node[1])} << std::endl;
+                                return 1;
+                            }}
+                        '''
+                    elif file_handle_type == 'WRITE':
+                        return f'''
+                            std::ofstream {remove_quotes(make_string_variable_friendly(self.walk(node[1])))}_file_handle({self.walk(node[1])}); // Open the file
+                            if (!{remove_quotes(make_string_variable_friendly(self.walk(node[1])))}_file_handle.is_open()) {{
+                                std::cerr << "Unable to open file: " << {self.walk(node[1])} << std::endl;
+                                return 1;
+                            }}
+                        '''
+                    elif file_handle_type == 'APPEND':
+                        return f'''
+                            std::ofstream {remove_quotes(make_string_variable_friendly(self.walk(node[1])))}_file_handle({self.walk(node[1])}, std::ios::app); // Open the file
+                            if (!{remove_quotes(make_string_variable_friendly(self.walk(node[1])))}_file_handle.is_open()) {{
+                                std::cerr << "Unable to open file: " << {self.walk(node[1])} << std::endl;
+                                return 1;
+                            }}
+                        '''
 
                 case 'EOF_check':
                     return f'EOF_check({remove_quotes(make_string_variable_friendly(self.walk(node[1])))}_file_handle)'
@@ -236,6 +254,13 @@ class PseudocodeCompiler:
                     return f'''
                             {remove_quotes(make_string_variable_friendly(self.walk(node[1])))}_file_handle.close();
                         '''
+
+                case 'write_file':
+                    return f'''
+                            {remove_quotes(make_string_variable_friendly(self.walk(node[1])))}_file_handle << {self.walk(node[2])} << std::endl;
+                        '''
+
+
 
                 case 'print_multiple':
                     # Evaluate each expression, print with no separator

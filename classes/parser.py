@@ -43,6 +43,12 @@ def make_pseudocode_parser():
         '''
         p[0] = ('read_file', p[2], p[4])
 
+    def p_write_file(p):
+        '''
+        statement : WRITEFILE expression COMMA expression
+        '''
+        p[0] = ('write_file', p[2], p[4])
+
     def p_close_file(p):
         '''
         statement : CLOSEFILE expression

@@ -79,5 +79,5 @@ if not res:
 # Run the compiled file if needed
 if args.run:
     print("==== OUTPUT ====")
-    os.chdir(os.path.dirname(compiler.output_file))
-    os.system(os.path.basename(compiler.output_file))
+    to_replace = "\\"
+    os.system(f'{compiler.output_file.replace("/", to_replace)}.exe')

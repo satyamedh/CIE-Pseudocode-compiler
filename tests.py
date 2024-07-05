@@ -65,7 +65,7 @@ def test_program(file_name):
                 print("====================================")
                 return
         else:
-            if not functiona(stdout.strip(), expected_output.strip()):
+            if not functiona(stdout.strip(), expected_output):
                 print("====================================")
                 print(f"Test {file_name}#{index} failed")
                 print(f"Expected: {expected_output}")

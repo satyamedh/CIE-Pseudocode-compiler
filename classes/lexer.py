@@ -53,7 +53,8 @@ reserved = {
     'APPEND': 'APPEND',
     'EOF': 'EOF',
     'READFILE': 'READFILE',
-    'CLOSEFILE': 'CLOSEFILE'
+    'CLOSEFILE': 'CLOSEFILE',
+    'WRITEFILE': 'WRITEFILE',
 }
 
 tokens = (
