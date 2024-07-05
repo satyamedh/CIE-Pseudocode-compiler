@@ -68,9 +68,26 @@ def make_pseudocode_parser():
         '''statement : DECLARE VARIABLE COLON data_type'''
         p[0] = ('declare', p[2], p[4])
 
+    def p_declaration_variable_list(p):
+        # DECLARE <variable_list> COLON data_type
+        '''statement : DECLARE variable_list COLON data_type'''
+        p[0] = ('declare_variable_list', p[2], p[4])
+
+    def p_variable_list(p):
+        '''variable_list : VARIABLE
+                         | variable_list COMMA VARIABLE'''
+        if len(p) == 2:
+            p[0] = [p[1]]
+        else:
+            p[0] = p[1] + [p[3]]
+
     def p_statement_declare_array(p):
         '''statement : DECLARE VARIABLE COLON ARRAY OPEN_SQUARE_BRACKET NUMBER COLON NUMBER CLOSE_SQUARE_BRACKET OF data_type'''
         p[0] = ('declare_array', p[2], p[6], p[8], p[11])
+
+    def p_statement_declare_array_2d(p):
+        '''statement : DECLARE VARIABLE COLON ARRAY OPEN_SQUARE_BRACKET NUMBER COLON NUMBER COMMA NUMBER COLON NUMBER CLOSE_SQUARE_BRACKET OF data_type'''
+        p[0] = ('declare_array_2d', p[2], p[6], p[8], p[10], p[12], p[15])
 
     def p_parameter(p):
         '''parameter : VARIABLE COLON data_type'''
@@ -172,6 +189,10 @@ def make_pseudocode_parser():
         '''statement : VARIABLE OPEN_SQUARE_BRACKET expression CLOSE_SQUARE_BRACKET ASSIGNMENT expression'''
         p[0] = ('assign_array', p[1], p[3], p[6])
 
+    def p_statement_assign_array_2d(p):
+        '''statement : VARIABLE OPEN_SQUARE_BRACKET expression COMMA expression CLOSE_SQUARE_BRACKET ASSIGNMENT expression'''
+        p[0] = ('assign_array_2d', p[1], p[3], p[5], p[8])
+
     def p_statement_if(p):
         '''statement : IF expression THEN statement_list ELSE statement_list ENDIF'''
         p[0] = ('if', p[2], p[4], p[6])
@@ -252,6 +273,10 @@ def make_pseudocode_parser():
     def p_expression_array(p):
         '''expression : VARIABLE OPEN_SQUARE_BRACKET expression CLOSE_SQUARE_BRACKET'''
         p[0] = ('array_index', p[1], p[3])
+
+    def p_expression_array_2d(p):
+        '''expression : VARIABLE OPEN_SQUARE_BRACKET expression COMMA expression CLOSE_SQUARE_BRACKET'''
+        p[0] = ('array_index_2d', p[1], p[3], p[5])
 
     def p_error(p):
         if p:

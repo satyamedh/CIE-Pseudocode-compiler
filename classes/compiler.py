@@ -260,6 +260,35 @@ class PseudocodeCompiler:
                             {remove_quotes(make_string_variable_friendly(self.walk(node[1])))}_file_handle << {self.walk(node[2])} << std::endl;
                         '''
 
+                case 'declare_variable_list':
+                    codee = ''
+                    for variable in node[1]:
+                        self.variables[variable] = node[2]
+                        codee += f'{self.datatypes_to_cpp[node[2]]} {variable} = {self.declare_defaults[node[2]]};\n'
+                    return codee
+
+                case 'declare_array_2d':
+                    self.variables[node[1]] = {
+                        'type': node[6],
+                        'starting1': node[2],
+                        'length1': node[3],
+                        'starting2': node[4],
+                        'length2': node[5]
+                    }
+                    length1 = (node[3] - node[2]) + 1
+                    length2 = (node[5] - node[4]) + 1
+                    return f'{self.datatypes_to_cpp[node[6]]} {node[1]}[{length1}][{length2}];'
+
+                case 'assign_array_2d':
+                    index1 = f'{self.walk(node[2])} - {self.variables[node[1]]["starting1"]}'
+                    index2 = f'{self.walk(node[3])} - {self.variables[node[1]]["starting2"]}'
+                    return f'{node[1]}[{index1}][{index2}] = {self.walk(node[4])};'
+
+                case 'array_index_2d':
+                    index1 = f'{self.walk(node[2])} - {self.variables[node[1]]["starting1"]}'
+                    index2 = f'{self.walk(node[3])} - {self.variables[node[1]]["starting2"]}'
+                    return f'{node[1]}[{index1}][{index2}]'
+
 
 
                 case 'print_multiple':
