@@ -4,6 +4,8 @@ import shutil
 import subprocess
 import json
 
+from classes.general_functions import dynamic_import
+
 
 def test_program(file_name):
     try:
@@ -35,6 +37,16 @@ def test_program(file_name):
         print("====================================")
         return
 
+    functiona = None
+
+    custom_test_function = False
+    if "function" in solutions:
+        # import the function from tests/solutions/{file_name}.py
+        module = dynamic_import(file_name, 'tests/solutions')
+        functiona = getattr(module, "test")
+        custom_test_function = True
+
+
     for index, trial in enumerate(solutions['trials']):
         input_data = str(trial[0])  # Goes to STDIN
         expected_output = str(trial[1])  # Comes from STDOUT
@@ -44,13 +56,22 @@ def test_program(file_name):
 
         stdout, stderr = process.communicate(input_data)
 
-        if stdout.strip() != expected_output.strip():
-            print("====================================")
-            print(f"Test {file_name}#{index} failed")
-            print(f"Expected: {expected_output}")
-            print(f"Got: {stdout}")
-            print("====================================")
-            return
+        if not custom_test_function:
+            if stdout.strip() != expected_output.strip():
+                print("====================================")
+                print(f"Test {file_name}#{index} failed")
+                print(f"Expected: {expected_output}")
+                print(f"Got: {stdout}")
+                print("====================================")
+                return
+        else:
+            if not functiona(stdout.strip(), expected_output.strip()):
+                print("====================================")
+                print(f"Test {file_name}#{index} failed")
+                print(f"Expected: {expected_output}")
+                print(f"Got: {stdout}")
+                print("====================================")
+                return
 
     print(f"Test {file_name} passed")
 
