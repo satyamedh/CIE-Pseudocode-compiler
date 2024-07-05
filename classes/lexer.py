@@ -47,6 +47,13 @@ reserved = {
     'ENDCASE': 'ENDCASE',
     'OTHERWISE': 'OTHERWISE',
     'ARRAY': 'ARRAY',
+    'OPENFILE': 'OPENFILE',
+    'READ': 'READ',
+    'WRITE': 'WRITE',
+    'APPEND': 'APPEND',
+    'EOF': 'EOF',
+    'READFILE': 'READFILE',
+    'CLOSEFILE': 'CLOSEFILE'
 }
 
 tokens = (

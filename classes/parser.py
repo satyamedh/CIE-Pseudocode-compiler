@@ -23,6 +23,32 @@ def make_pseudocode_parser():
                      | REAL'''
         p[0] = p[1]
 
+    def p_file_handle_type(p):
+        '''
+        file_handle_type : READ
+                        | APPEND
+                        | WRITE
+        '''
+        p[0] = p[1]
+
+    def p_statement_openfile(p):
+        '''
+        statement : OPENFILE expression FOR file_handle_type
+        '''
+        p[0] = ('open_file', p[2], p[4])
+
+    def p_read_file(p):
+        '''
+        statement : READFILE expression COMMA VARIABLE
+        '''
+        p[0] = ('read_file', p[2], p[4])
+
+    def p_close_file(p):
+        '''
+        statement : CLOSEFILE expression
+        '''
+        p[0] = ('close_file', p[2])
+
     def p_procedure_no_params(p):
         '''statement : PROCEDURE VARIABLE OPEN_BRACKET CLOSE_BRACKET statement_list ENDPROCEDURE'''
         p[0] = ('procedure_no_param', p[2], p[5])
@@ -115,6 +141,10 @@ def make_pseudocode_parser():
         '''
 
         p[0] = ('run_function_with_params', p[1], p[3])
+
+    def p_eof_check(p):
+        '''expression : EOF OPEN_BRACKET expression CLOSE_BRACKET'''
+        p[0] = ('EOF_check', p[3])
 
     def p_run_function_no_params(p):
         '''expression : VARIABLE OPEN_BRACKET CLOSE_BRACKET'''

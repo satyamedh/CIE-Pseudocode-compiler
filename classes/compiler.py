@@ -2,6 +2,8 @@ import os
 import random
 import subprocess
 
+from classes.general_functions import remove_quotes, make_string_variable_friendly
+
 
 class PseudocodeCompiler:
     binop_cond_psc_to_cpp = {
@@ -171,16 +173,16 @@ class PseudocodeCompiler:
                             {self.walk(node[3])}
                         }}
                         '''
-    
+
                 case 'case_statement':
                     codee = f'''
                     switch ({node[1]}) {{
                     {self.walk(node[2])}
                     }}
                     '''
-    
+
                     return codee
-    
+
                 case 'case':
                     if node[1] == "OTHERWISE":
                         return f'''
@@ -213,8 +215,28 @@ class PseudocodeCompiler:
                     index = f'{self.walk(node[2])} - {self.variables[node[1]]["starting"]}'
                     return f'{node[1]}[{index}]'
 
-                
-    
+                case 'open_file':
+                    return f'''
+                        std::ifstream {remove_quotes(make_string_variable_friendly(self.walk(node[1])))}_file_handle({self.walk(node[1])}); // Open the file
+                        if (!{remove_quotes(make_string_variable_friendly(self.walk(node[1])))}_file_handle.is_open()) {{
+                            std::cerr << "Unable to open file: " << {self.walk(node[1])} << std::endl;
+                            return 1;
+                        }}
+                    '''
+
+                case 'EOF_check':
+                    return f'EOF_check({remove_quotes(make_string_variable_friendly(self.walk(node[1])))}_file_handle)'
+
+                case 'read_file':
+                    return f'''
+                            std::getline({remove_quotes(make_string_variable_friendly(self.walk(node[1])))}_file_handle, {node[2]});
+                        '''
+
+                case 'close_file':
+                    return f'''
+                            {remove_quotes(make_string_variable_friendly(self.walk(node[1])))}_file_handle.close();
+                        '''
+
                 case 'print_multiple':
                     # Evaluate each expression, print with no separator
                     codee = 'std::cout << '
@@ -261,6 +283,7 @@ class PseudocodeCompiler:
         #include <iostream>
         #include <cctype>
         #include <random>
+        #include <fstream>
         
         // Helper functions
         bool string_to_bool(std::string str) {{
@@ -296,6 +319,10 @@ class PseudocodeCompiler:
         
         int INT(int x) {{
             return x;
+        }}
+        
+        bool EOF_check(std::ifstream &file) {{
+            return file.eof();
         }}
         
         // Create a random device
