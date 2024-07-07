@@ -80,4 +80,8 @@ if not res:
 if args.run:
     print("==== OUTPUT ====")
     to_replace = "\\"
-    os.system(f'{compiler.output_file.replace("/", to_replace)}.exe')
+    if os.name == 'posix':
+        to_replace = "/"
+
+    ext = ".exe" if os.name == 'nt' else ""
+    os.system(f'{compiler.output_file.replace("/", to_replace)}{ext}')
