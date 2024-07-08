@@ -32,6 +32,13 @@ class PseudocodeCompiler:
         'STRING': '%s',
     }
 
+    datatype_python_to_cpp = {
+        'int': 'int',
+        'str': 'std::string',
+        'bool': 'bool',
+        'float': 'float',
+    }
+
     datatypes_to_cpp = {
         'INTEGER': 'int',
         'STRING': 'std::string',
@@ -278,6 +285,13 @@ class PseudocodeCompiler:
                     length1 = (node[3] - node[2]) + 1
                     length2 = (node[5] - node[4]) + 1
                     return f'{self.datatypes_to_cpp[node[6]]} {node[1]}[{length1}][{length2}];'
+
+                case 'declare_constant':
+                    value = self.walk(node[2])
+                    datatype = eval(f"type({value}).__qualname__")
+                    datatype = self.datatype_python_to_cpp[datatype]
+                    self.variables[node[1]] = datatype
+                    return f'const {datatype} {node[1]} = {value};'
 
                 case 'assign_array_2d':
                     index1 = f'{self.walk(node[2])} - {self.variables[node[1]]["starting1"]}'

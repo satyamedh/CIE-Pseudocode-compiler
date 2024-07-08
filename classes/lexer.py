@@ -55,6 +55,7 @@ reserved = {
     'READFILE': 'READFILE',
     'CLOSEFILE': 'CLOSEFILE',
     'WRITEFILE': 'WRITEFILE',
+    'CONSTANT': 'CONSTANT',
 }
 
 tokens = (

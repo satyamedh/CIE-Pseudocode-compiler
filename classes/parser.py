@@ -81,6 +81,10 @@ def make_pseudocode_parser():
         else:
             p[0] = p[1] + [p[3]]
 
+    def p_statement_declare_constant(p):
+        '''statement : CONSTANT VARIABLE EQUAL expression'''
+        p[0] = ('declare_constant', p[2], p[4])
+
     def p_statement_declare_array(p):
         '''statement : DECLARE VARIABLE COLON ARRAY OPEN_SQUARE_BRACKET NUMBER COLON NUMBER CLOSE_SQUARE_BRACKET OF data_type'''
         p[0] = ('declare_array', p[2], p[6], p[8], p[11])
