@@ -407,7 +407,38 @@ class PseudocodeCompiler:
             return (float) random_value * x;
         }}
         
+        std::string NUM_TO_STRING(float x) {{
+            return std::to_string(x);
+        }}
         
+        std::string NUM_TO_STRING(int x) {{
+            return std::to_string(x);
+        }}  
+        
+        float STRING_TO_NUM(std::string str) {{
+            return std::stof(str);
+        }}
+        
+        int ASC(char ch) {{
+            // return the ASCII number of the character
+            return (int) ch;
+        }}
+        
+        char CHR(int num) {{
+            // return the character of the ASCII number
+            return (char) num;
+        }}
+        
+        int MOD(int x, int y) {{
+            return x % y;
+        }}
+        
+        int DIV(int x, int y) {{
+            return x / y;
+        }}      
+        
+        
+        // user-defined functions and procedures
         {procedure_code}        
         
         int main() {{
