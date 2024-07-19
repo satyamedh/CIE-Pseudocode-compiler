@@ -209,6 +209,10 @@ def make_pseudocode_parser():
         '''statement : WHILE expression statement_list ENDWHILE'''
         p[0] = ('while', p[2], p[3])
 
+    def p_statement_while_do(p):
+        '''statement : WHILE expression DO statement_list ENDWHILE'''
+        p[0] = ('while_do', p[2], p[4])
+
     def p_statement_print_multiple(p):
         '''statement : PRINT expression_list'''
         p[0] = ('print_multiple', p[2])
