@@ -120,6 +120,18 @@ def make_pseudocode_parser():
         '''statement : DECLARE VARIABLE COLON ARRAY OPEN_SQUARE_BRACKET NUMBER COLON NUMBER CLOSE_SQUARE_BRACKET OF VARIABLE'''
         p[0] = ('declare_array_custom_datatype', p[2], p[6], p[8], p[11])
 
+    def p_statement_enum_declaration(p):
+        '''statement : TYPE VARIABLE EQUAL OPEN_BRACKET enum_list CLOSE_BRACKET'''
+        p[0] = ('enum_declaration', p[2], p[5])
+
+    def p_enum_list(p):
+        '''enum_list : VARIABLE
+                     | enum_list COMMA VARIABLE'''
+        if len(p) == 2:
+            p[0] = [p[1]]
+        else:
+            p[0] = p[1] + [p[3]]
+
     def p_statement_declare_array_2d_custom_datatype(p):
         '''statement : DECLARE VARIABLE COLON ARRAY OPEN_SQUARE_BRACKET NUMBER COLON NUMBER COMMA NUMBER COLON NUMBER CLOSE_SQUARE_BRACKET OF VARIABLE'''
         p[0] = ('declare_array_2d_custom_datatype', p[2], p[6], p[8], p[10], p[12], p[15])

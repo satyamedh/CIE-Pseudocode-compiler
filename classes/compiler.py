@@ -56,6 +56,7 @@ class PseudocodeCompiler:
     }
 
     def __init__(self, cpp_file: str = "temp/temp.cpp", output_file: str = "temp/temp", random_seed: int = 42):
+        self.enums = {}
         self.ast = None
         self.cpp_code = ""
 
@@ -348,6 +349,11 @@ class PseudocodeCompiler:
 
                     # for normal variables, it will just return the variable name
                     return f'{node[1]}.{node[2]}'
+
+                case 'enum_declaration':
+                    enum_values = ', '.join(node[2])
+                    self.enums[node[1]] = enum_values
+                    return f'enum {node[1]} {{\n{enum_values}\n}};'
 
                 case 'print_multiple':
                     # Evaluate each expression, print with no separator
