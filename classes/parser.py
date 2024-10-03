@@ -71,6 +71,10 @@ def make_pseudocode_parser():
         '''statement : DECLARE VARIABLE COLON data_type'''
         p[0] = ('declare', p[2], p[4])
 
+    def p_statement_declare_custom_datatype(p):
+        '''statement : DECLARE VARIABLE COLON VARIABLE'''
+        p[0] = ('declare_custom_datatype', p[2], p[4])
+
     def p_statement_declare_record(p):
         # TYPE StudentRecord
         #     DECLARE LastName : STRING
@@ -111,6 +115,16 @@ def make_pseudocode_parser():
     def p_statement_declare_array_2d(p):
         '''statement : DECLARE VARIABLE COLON ARRAY OPEN_SQUARE_BRACKET NUMBER COLON NUMBER COMMA NUMBER COLON NUMBER CLOSE_SQUARE_BRACKET OF data_type'''
         p[0] = ('declare_array_2d', p[2], p[6], p[8], p[10], p[12], p[15])
+
+    def p_statement_declare_array_custom_datatype(p):
+        '''statement : DECLARE VARIABLE COLON ARRAY OPEN_SQUARE_BRACKET NUMBER COLON NUMBER CLOSE_SQUARE_BRACKET OF VARIABLE'''
+        p[0] = ('declare_array_custom_datatype', p[2], p[6], p[8], p[11])
+
+    def p_statement_declare_array_2d_custom_datatype(p):
+        '''statement : DECLARE VARIABLE COLON ARRAY OPEN_SQUARE_BRACKET NUMBER COLON NUMBER COMMA NUMBER COLON NUMBER CLOSE_SQUARE_BRACKET OF VARIABLE'''
+        p[0] = ('declare_array_2d_custom_datatype', p[2], p[6], p[8], p[10], p[12], p[15])
+
+
 
     def p_parameter(p):
         '''parameter : VARIABLE COLON data_type'''
@@ -207,6 +221,19 @@ def make_pseudocode_parser():
     def p_statement_assign(p):
         '''statement : VARIABLE ASSIGNMENT expression'''
         p[0] = ('assign', p[1], p[3])
+
+    def p_expression_access(p):
+        '''expression : VARIABLE DOT VARIABLE
+                        | expression DOT VARIABLE
+        '''
+        p[0] = ('access', p[1], p[3])
+
+    def p_statement_assign_access(p):
+        '''statement : expression ASSIGNMENT expression'''
+        # make sure the left hand side is an access expression
+        if p[1][0] != 'access':
+            raise PseudocodeSyntaxError(f"Invalid access expression: {p[1]}")
+        p[0] = ('assign_access', p[1], p[3])
 
     def p_statement_assign_array(p):
         '''statement : VARIABLE OPEN_SQUARE_BRACKET expression CLOSE_SQUARE_BRACKET ASSIGNMENT expression'''

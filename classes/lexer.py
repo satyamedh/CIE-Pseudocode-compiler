@@ -87,6 +87,7 @@ tokens = (
     "CONCATENATE",
     "OPEN_SQUARE_BRACKET",
     "CLOSE_SQUARE_BRACKET",
+    "DOT",
 ) + tuple(reserved.values())
 
 
@@ -121,6 +122,8 @@ def make_psuedocode_lexer():
     t_COMMA = r','
 
     t_CONCATENATE = r'&'
+
+    t_DOT = r'\.'
 
     def __init__(self):
         self.lexer = None

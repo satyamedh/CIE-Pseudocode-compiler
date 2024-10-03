@@ -303,7 +303,51 @@ class PseudocodeCompiler:
                     index2 = f'{self.walk(node[3])} - {self.variables[node[1]]["starting2"]}'
                     return f'{node[1]}[{index1}][{index2}]'
 
+                case 'declare_record':
+                    self.variables[node[1]] = node[2]
+                    return f'struct {node[1]} {{\n{self.walk(node[2])}\n}};'
 
+                case 'declare_custom_datatype':
+                    # making a new variable of the custom datatype
+                    self.variables[node[1]] = node[2]
+                    return f'{node[2]} {node[1]};'
+
+                case 'declare_array_custom_datatype':
+                    self.variables[node[1]] = {
+                        'type': node[4],
+                        'length': node[3],
+                        'starting': node[2]
+                    }
+                    length = (node[3] - node[2]) + 1
+                    return f'{node[4]} {node[1]}[{length}];'
+
+                case 'declare_array_2d_custom_datatype':
+                    self.variables[node[1]] = {
+                        'type': node[6],
+                        'starting1': node[2],
+                        'length1': node[3],
+                        'starting2': node[4],
+                        'length2': node[5]
+                    }
+                    length1 = (node[3] - node[2]) + 1
+                    length2 = (node[5] - node[4]) + 1
+                    return f'{node[6]} {node[1]}[{length1}][{length2}];'
+
+                case 'assign_access':
+                    return f'{self.walk(node[1])} = {self.walk(node[2])};'
+
+                case 'access':
+                    # access the variable from (presumably) a record(struct)
+                    # for evaluate-able accessors, we will evaluate them
+                    if isinstance(node[1], tuple) and isinstance(node[2], tuple):  # eg. a[x].b[y]
+                        return f'{self.walk(node[1])}.{self.walk(node[2])}'
+                    elif isinstance(node[2], tuple):  # eg. a[x].b
+                        return f'{node[1]}.[{self.walk(node[2])}]'
+                    elif isinstance(node[1], tuple):  # eg. a.b[x]
+                        return f'{self.walk(node[1])}.{node[2]}'
+
+                    # for normal variables, it will just return the variable name
+                    return f'{node[1]}.{node[2]}'
 
                 case 'print_multiple':
                     # Evaluate each expression, print with no separator
