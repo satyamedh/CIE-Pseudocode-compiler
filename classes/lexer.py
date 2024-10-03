@@ -56,7 +56,9 @@ reserved = {
     'CLOSEFILE': 'CLOSEFILE',
     'WRITEFILE': 'WRITEFILE',
     'CONSTANT': 'CONSTANT',
-    'DO': 'DO'
+    'DO': 'DO',
+    'TYPE': 'TYPE',
+    'ENDTYPE': 'ENDTYPE',
 }
 
 tokens = (

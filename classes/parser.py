@@ -2,6 +2,9 @@ from ply.yacc import yacc
 from classes.lexer import tokens, reserved
 
 
+class PseudocodeSyntaxError(Exception):
+    pass
+
 def make_pseudocode_parser():
     def p_program(p):
         '''program : statement_list'''
@@ -67,6 +70,22 @@ def make_pseudocode_parser():
     def p_statement_declare(p):
         '''statement : DECLARE VARIABLE COLON data_type'''
         p[0] = ('declare', p[2], p[4])
+
+    def p_statement_declare_record(p):
+        # TYPE StudentRecord
+        #     DECLARE LastName : STRING
+        #     DECLARE FirstName : STRING
+        #     DECLARE YearGroup : INTEGER
+        #     DECLARE FormGroup : CHAR
+        # ENDTYPE
+        '''statement : TYPE VARIABLE statement_list ENDTYPE'''
+
+        # ensure all statements are declare statements
+        for statement in p[3]:
+            if statement[0] != 'declare':
+                raise PseudocodeSyntaxError(f"Invalid statement in record type: {statement}")
+
+        p[0] = ('declare_record', p[2], p[3])
 
     def p_declaration_variable_list(p):
         # DECLARE <variable_list> COLON data_type
