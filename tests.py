@@ -3,6 +3,7 @@ import importlib
 import shutil
 import subprocess
 import json
+import sys
 
 from classes.general_functions import dynamic_import
 
@@ -12,7 +13,7 @@ def test_program(file_name):
         solutions = json.load(open(f'tests/solutions/{file_name}.json'))
     except FileNotFoundError:
         print(f"No solutions found for {file_name}")
-        return
+        sys.exit(2)
 
     # the solutions are stored in the trials variable
     # each trial is a list of inputs and expected outputs
@@ -35,7 +36,7 @@ def test_program(file_name):
         print("==== STDERR ====")
         print(stderr)
         print("====================================")
-        return
+        sys.exit(-1)
 
     functiona = None
 
@@ -63,7 +64,7 @@ def test_program(file_name):
                 print(f"Expected: {expected_output}")
                 print(f"Got: {stdout}")
                 print("====================================")
-                return
+                sys.exit(1)
         else:
             if not functiona(stdout.strip(), expected_output):
                 print("====================================")
@@ -71,7 +72,7 @@ def test_program(file_name):
                 print(f"Expected: {expected_output}")
                 print(f"Got: {stdout}")
                 print("====================================")
-                return
+                sys.exit(1)
 
     print(f"Test {file_name} passed")
 
