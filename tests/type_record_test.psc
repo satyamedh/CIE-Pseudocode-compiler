@@ -20,7 +20,7 @@ FOR i <- 1 TO 30
     Pupils[i].YearGroup <- Pupils[i].YearGroup + 1
 NEXT i
 
-
+OUTPUT Pupil1.LastName, Pupil1.FirstName, Pupil1.YearGroup, Pupil1.FormGroup
 
 
 
