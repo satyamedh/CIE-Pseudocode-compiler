@@ -23,28 +23,6 @@ I then use the AST to generate C++ code, and call `g++` to compile the generated
 - Python 3
 - gcc (for compiling the generated C++ code)
 
-## Limitations (for now)
-- No PEMDAS/BODMAS support, use brackets to enforce order of operations
-- Only the following are supported right now
-  - `IF` statements (with or without `ELSE`)
-  - `REPEAT` loops
-  - `FOR` loops
-  - `WHILE` loops
-  - All data types except `DATE`
-  - All variable types except `CONSTANT`
-  - `OUTPUT` and `INPUT` statements
-  - Multi-expression `OUTPUT` statements
-  - All arithmetic operators
-  - `AND`, `OR`, `NOT` logical operators
-  - All comparison operators
-  - `DECLARE` and `<-` assignment operators
-  - More things I can't remember right now
-  - `PROCEDURE` definitions with or without parameters
-  - `FUNCTION` definitions with or without parameters
-  - expression evaluation of function calls
-  - `CALL` statements with or without parameters
-- Haven't tested on linux or mac yet, probably won't work
-
 ## Usage
 ```bash
 $ python main.py -h
